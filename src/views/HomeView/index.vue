@@ -5,7 +5,7 @@
     </div>
     <a-layout class="layout-container">
       <div class="wine-container">
-        <!-- <div class="overlay"></div> -->
+        <div class="overlay"></div>
         <div class="search-container">
           <div class="search">
             <a-input placeholder="Search for wine" class="search-input">

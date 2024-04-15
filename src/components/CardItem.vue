@@ -7,15 +7,22 @@
       <div class="infor">
         <h4>60 Sessantanni Limited Edition Italia champagne</h4>
         <div class="wine-capacity">
-          <div>150ml</div>
-          <div>750ml</div>
+          <div>
+            <img src="../assets/icon/Champagne.png" alt="champagne" />
+            150ml
+          </div>
+          <div>
+            <img src="../assets/icon/BeerBottle.png" alt="beerbottle" />
+            750ml
+          </div>
         </div>
       </div>
       <div class="price">
         <h3>$1000</h3>
         <div class="btn-container">
           <a-button>?</a-button>
-          <a-button>+</a-button>
+          <a-button @click="showModal">+</a-button>
+          <modal :show="visible" @closeModal="closeModal" />
         </div>
       </div>
     </div>
@@ -23,9 +30,28 @@
 </template>
 
 <script lang="ts">
+import { ref } from "vue";
+import Modal from "./Modal.vue";
+
 export default {
+  components: {
+    Modal,
+  },
   setup() {
-    return {};
+    const visible = ref<boolean>(false);
+
+    const showModal = () => {
+      visible.value = true;
+    };
+
+    const closeModal = () => {
+      visible.value = false;
+    };
+    return {
+      visible,
+      showModal,
+      closeModal,
+    };
   },
 };
 </script>
@@ -76,6 +102,7 @@ export default {
   align-items: center;
 }
 .wine-capacity div {
+  font-family: Inter;
   font-size: 14px;
   font-weight: 500;
   color: #fff;
@@ -124,5 +151,9 @@ export default {
     #efdcac 49.93%,
     #dcc29e 98.97%
   );
+}
+
+.ant-modal-content {
+  padding: 38px 45px;
 }
 </style>
