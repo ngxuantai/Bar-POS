@@ -21,8 +21,16 @@
         <h3>$1000</h3>
         <div class="btn-container">
           <a-button>?</a-button>
-          <a-button @click="showModal">+</a-button>
-          <modal :show="visible" @closeModal="closeModal" />
+          <a-button @click="showOdering = true">+</a-button>
+          <order-modal
+            :show="showOdering"
+            @closeModal="showOdering = false"
+            @order="shwoPurchase = true"
+          />
+          <purchase-modal
+            :show="shwoPurchase"
+            @closeModal="shwoPurchase = false"
+          />
         </div>
       </div>
     </div>
@@ -31,26 +39,20 @@
 
 <script lang="ts">
 import { ref } from "vue";
-import Modal from "./OderModal.vue";
+import OrderModal from "./OrderModal.vue";
+import PurchaseModal from "./PurchaseModal.vue";
 
 export default {
   components: {
-    Modal,
+    OrderModal,
+    PurchaseModal,
   },
   setup() {
-    const visible = ref<boolean>(false);
-
-    const showModal = () => {
-      visible.value = true;
-    };
-
-    const closeModal = () => {
-      visible.value = false;
-    };
+    const showOdering = ref<boolean>(false);
+    const shwoPurchase = ref<boolean>(false);
     return {
-      visible,
-      showModal,
-      closeModal,
+      showOdering,
+      shwoPurchase,
     };
   },
 };
