@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   Checkbox,
+  Badge,
 } from "ant-design-vue";
 import "@/assets/styles/global.css";
 
@@ -22,4 +23,5 @@ app.use(Button);
 app.use(Row);
 app.use(Col);
 app.use(Checkbox);
+app.use(Badge);
 app.mount("#app");

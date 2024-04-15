@@ -24,7 +24,12 @@
                 <a-col v-for="item in 2" :key="item.toString()" :span="12">
                   <card-item />
                 </a-col>
-
+                <a-col v-for="item in 2" :key="item.toString()" :span="12">
+                  <card-item />
+                </a-col>
+                <a-col v-for="item in 2" :key="item.toString()" :span="12">
+                  <card-item />
+                </a-col>
                 <a-col v-for="item in 2" :key="item.toString()" :span="12">
                   <card-item />
                 </a-col>
@@ -40,6 +45,7 @@
           </a-tabs>
         </div>
       </div>
+      <cart-footer />
     </a-layout>
   </a-layout>
 </template>
@@ -47,16 +53,18 @@
 <script lang="ts">
 import { ref } from "vue";
 import { TabPane } from "ant-design-vue";
+import { SearchOutlined } from "@ant-design/icons-vue";
 import SidebarCategory from "@/components/SidebarCategory.vue";
 import CardItem from "@/components/CardItem.vue";
-import { SearchOutlined } from "@ant-design/icons-vue";
+import CartFooter from "@/components/CartFooter.vue";
 
 export default {
   components: {
     TabPane,
+    SearchOutlined,
     SidebarCategory,
     CardItem,
-    SearchOutlined,
+    CartFooter,
   },
   setup() {
     const activeKey = ref("1");

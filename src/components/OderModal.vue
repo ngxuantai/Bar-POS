@@ -47,7 +47,7 @@
           </div>
           <div class="flex-between">
             <div class="checkbox">
-              <input type="checkbox" v-model="checkBottle" />
+              <input type="checkbox" v-model="checkGlass" />
               <span>By the glass 150 ml</span>
             </div>
             <div class="btn-change">
@@ -73,8 +73,8 @@
           />
         </div>
         <div class="cart">
-          <a-button id="add-cart">Add to cart</a-button>
-          <a-button id="order" class="btn-background-linear">
+          <a-button id="add-cart" @click="addCart">Add to cart</a-button>
+          <a-button id="order" class="btn-background-linear" @click="order">
             Order now
           </a-button>
         </div>
@@ -127,7 +127,14 @@ export default defineComponent({
       glass.value++;
     };
     const close = () => {
-      console.log("close");
+      emit("closeModal");
+    };
+    const addCart = () => {
+      emit("addCart");
+      emit("closeModal");
+    };
+    const order = () => {
+      emit("order");
       emit("closeModal");
     };
     return {
@@ -141,6 +148,8 @@ export default defineComponent({
       subGlass,
       addGlass,
       close,
+      addCart,
+      order,
     };
   },
 });
@@ -232,9 +241,10 @@ export default defineComponent({
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
+  margin: 0;
 }
 
-.infor > span {
+.infor h4 span {
   font-size: 28px;
   font-weight: 400;
   line-height: 20px;
@@ -306,27 +316,8 @@ export default defineComponent({
   font-size: 24px;
 }
 
-.checkbox {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.checkbox .ant-checkbox {
-  border: 10px solid green;
-  border-radius: 2px;
-}
-.checkbox input[type="checkbox"] {
-  width: 28px;
-  height: 28px;
-  border: 10px solid green;
-  border-radius: 2px;
-  /* border: 1px solid green; */
-}
-.checkbox > span {
-  font-family: Merriweather;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 40px;
+.checkbox input[type="checkbox"]::after {
+  border: none;
 }
 
 .btn-change {

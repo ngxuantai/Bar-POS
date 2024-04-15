@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { ref } from "vue";
-import Modal from "./Modal.vue";
+import Modal from "./OderModal.vue";
 
 export default {
   components: {
@@ -96,6 +96,7 @@ export default {
   text-align: left;
   margin: 0;
 }
+
 .wine-capacity {
   display: flex;
   justify-content: flex-start;
@@ -139,6 +140,14 @@ export default {
   display: flex;
   gap: 20px;
 }
+.btn-container button {
+  width: 34px;
+  height: 31px;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .btn-container button:nth-child(1) {
   color: #fff;
   border: 1px solid #cacaca;
@@ -151,6 +160,7 @@ export default {
     #efdcac 49.93%,
     #dcc29e 98.97%
   );
+  border: none;
 }
 
 .ant-modal-content {
