@@ -1,38 +1,40 @@
 <template>
   <div class="card-container">
     <div class="img-container">
-      <img src="../assets/image/card-image.png" alt="item-image" />
+      <img src="../assets/image/item-card-image.png" alt="item-image" />
     </div>
     <div class="content">
-      <div class="infor">
-        <h4>60 Sessantanni Limited Edition Italia champagne</h4>
-        <div class="wine-capacity">
+      <h4>60 Sessantanni Limited Edition Italia champagne</h4>
+      <div class="detail">
+        <div class="first-row">
           <div>
-            <img src="../assets/icon/Champagne.png" alt="champagne" />
+            <img src="../assets/icon/Glass.png" alt="glass" />
             150ml
           </div>
           <div>
-            <img src="../assets/icon/BeerBottle.png" alt="beerbottle" />
+            <img src="../assets/icon/Bottle.png" alt="bottle" />
             750ml
           </div>
         </div>
-      </div>
-      <div class="price">
-        <h3>$1000</h3>
-        <div class="btn-container">
-          <a-button>?</a-button>
-          <a-button @click="showOdering = true">+</a-button>
-          <order-modal
-            :show="showOdering"
-            @closeModal="showOdering = false"
-            @order="shwoPurchase = true"
-          />
-          <purchase-modal
-            :show="shwoPurchase"
-            @closeModal="shwoPurchase = false"
-          />
+        <div class="second-row">
+          <div>
+            <img src="../assets/icon/Bottle.png" alt="bottle" />
+            150ml
+          </div>
         </div>
       </div>
+    </div>
+    <div class="btn-container">
+      <a-button @click="showOdering = true">
+        <span>$300 - $1000</span>
+        <img src="../assets/icon/Union.png" alt="plus" />
+      </a-button>
+      <order-modal
+        :show="showOdering"
+        @closeModal="showOdering = false"
+        @order="shwoPurchase = true"
+      />
+      <purchase-modal :show="shwoPurchase" @closeModal="shwoPurchase = false" />
     </div>
   </div>
 </template>
@@ -60,58 +62,67 @@ export default {
 
 <style scoped>
 .card-container {
-  width: auto;
-  height: 189px;
+  width: 100%;
+  height: 397px;
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
+
 .img-container {
-  width: auto;
-  height: 170px;
+  width: 159px;
+  height: 220px;
 }
+
 .img-container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .content {
   width: 100%;
-  padding: 12px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: 16px;
+  padding: 0 12px;
 }
-.infor {
+
+.content > h4 {
+  font-family: Newsreader;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+  color: #fff;
+  margin: 0;
+}
+
+.detail {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-.infor h4 {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 28px;
-  letter-spacing: -0.4000000059604645px;
-  text-align: left;
-  margin: 0;
-}
 
-.wine-capacity {
+.first-row {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.wine-capacity div {
+
+.first-row div,
+.second-row div {
   font-family: Inter;
   font-size: 14px;
   font-weight: 500;
   color: #fff;
   padding: 0 12px;
 }
-.wine-capacity div:nth-child(1) {
+
+.first-row div:nth-child(1) {
   border-right: 1px solid #fff;
   padding-left: 0;
 }
@@ -122,6 +133,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
+
 .price h3 {
   font-size: 28px;
   font-weight: 400;
@@ -138,24 +150,18 @@ export default {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 .btn-container {
-  display: flex;
-  gap: 20px;
+  width: 100%;
 }
+
 .btn-container button {
-  width: 34px;
-  height: 31px;
-  border-radius: 2px;
+  width: 100%;
+  height: 47px;
+  padding: 0 20px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-}
-.btn-container button:nth-child(1) {
-  color: #fff;
-  border: 1px solid #cacaca;
-  background: #ffffff1a;
-}
-.btn-container button:nth-child(2) {
   background: linear-gradient(
     268.43deg,
     #fdeec3 3.58%,
@@ -164,8 +170,12 @@ export default {
   );
   border: none;
 }
-
-.ant-modal-content {
-  padding: 38px 45px;
+.btn-container button span {
+  font-family: Newsreader;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+  color: #051a38;
 }
 </style>

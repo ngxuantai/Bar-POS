@@ -11,6 +11,8 @@ import {
   Col,
   Checkbox,
   Badge,
+  Menu,
+  Select,
 } from "ant-design-vue";
 import "@/assets/styles/global.css";
 
@@ -24,4 +26,6 @@ app.use(Row);
 app.use(Col);
 app.use(Checkbox);
 app.use(Badge);
+app.use(Menu);
+app.use(Select);
 app.mount("#app");

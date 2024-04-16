@@ -2,39 +2,45 @@
   <div v-if="show" class="modal">
     <div class="modal-content">
       <div class="title">
-        <div>
-          <h4>Order #10</h4>
-        </div>
         <close-outlined @click="close" />
       </div>
       <div class="content">
-        <div class="thanks">
-          <span>Thank you for your purchase</span>
+        <div class="success">
+          <span>
+            Excellent choice!
+            <br />
+            Your drinks will arrive shortly.
+          </span>
         </div>
-        <div class="list-items">
-          <div class="items flex-between">
-            <div class="img-container">
-              <img src="../assets/image/img.png" alt="item-image" />
+        <div class="infor-order">
+          <div class="order">
+            <div class="flex-row-between">
+              <span class="title-name">Order ID</span>
             </div>
-            <div class="infor">
-              <h2>60 Sessantanni Limited Edition Italia champagne</h2>
-              <div class="type flex-between">
-                <h4>By the bottle 750ml x1</h4>
+            <div class="flex-row-between">
+              <span class="title-name">Time</span>
+              <p class="title-name">22:00 p.m; 4th 4/ 2024</p>
+            </div>
+          </div>
+          <div class="list-items">
+            <span class="title-name">Products</span>
+            <div class="item">
+              <span class="title-name">
+                60 Sessantanni Limited Edition Italia champagne
+              </span>
+              <div class="flex-row-between">
+                <h4>750ml bottle x2</h4>
                 <p>$1000</p>
-              </div>
-              <div class="type flex-between">
-                <h4>By the glass 150ml x1</h4>
-                <p>$300</p>
-              </div>
-              <div class="total flex-between">
-                <h4>Total</h4>
-                <p>$1300</p>
               </div>
             </div>
           </div>
-        </div>
-        <div class="new-order">
-          <a-button><span>New order</span></a-button>
+          <div class="flex-row-between total">
+            <span class="title-name">Total</span>
+            <h3>$2000</h3>
+          </div>
+          <div class="new-order">
+            <a-button><span>New order</span></a-button>
+          </div>
         </div>
       </div>
     </div>
@@ -83,126 +89,121 @@ export default defineComponent({
 }
 
 .modal-content {
-  /* margin: 15% auto; */
-  padding: 38px 44px;
-  width: 594px;
+  width: 610px;
+  padding: 28px;
   background-color: #fff;
-  border: 1px solid #888;
   border-radius: 6px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  justify-content: center;
 }
 
 .title {
+  width: 100%;
   display: flex;
-  justify-content: space-between;
-  /* margin-bottom: 28px; */
-}
-.title > div {
-  height: 40px;
-  padding: 12px;
-  border-radius: 3px;
-  background: #f5f5f5;
-  align-content: center;
-}
-.title > div > h4,
-.title > span {
-  font-family: Merriweather;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 24px;
-  text-align: center;
-  margin: 0;
-  align-content: center;
+  align-items: flex-end;
+  margin-bottom: 4px;
 }
 
 .content {
-  width: 466px;
-  margin: 0 auto;
+  margin: 0px 18px 9px 18px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  gap: 40px;
+  gap: 24px;
 }
-.thanks span {
+
+.success {
+  margin: 0 29px;
+  width: 460px;
+  height: 152px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.success span {
   font-family: Newsreader;
   font-size: 24px;
   font-weight: 400;
-  line-height: 25px;
-  letter-spacing: -0.4000000059604645px;
+  line-height: 32px;
+  text-align: center;
 }
 
-.list-items {
-  width: 100%;
+.flex-row-between {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  justify-content: space-between;
   align-items: center;
 }
-
-.items {
-  width: 100%;
-  gap: 12px;
-}
-
-.img-container {
-  width: 91px;
-  height: 114px;
-}
-.img-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.infor {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.infor h2,
-.infor h4,
-.infor p {
-  margin: 0;
-}
-.infor h2 {
+.title-name {
   font-family: Newsreader;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
-  line-height: 24px;
-  letter-spacing: -0.4000000059604645px;
+  line-height: 26px;
   text-align: left;
 }
 
-.type h4,
-.type p {
-  font-family: Inter;
+.infor-order {
+  display: flex;
+  flex-direction: column;
+}
+
+.order {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.order p {
+  margin: 0;
+  color: #afafaf;
+}
+
+.list-items {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.item h4 {
+  font-family: Newsreader;
   font-size: 14px;
   font-weight: 400;
-  line-height: 20px;
-  letter-spacing: -0.4000000059604645px;
+  line-height: 22px;
+  text-align: left;
+  color: #afafaf;
+}
+.item p {
+  font-family: Newsreader;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
   text-align: left;
   color: #afafaf;
 }
 
-.total h4,
-.total p {
-  font-family: Inter;
-  font-size: 14px;
+.total {
+  padding-top: 16px;
+}
+.total h3 {
+  font-family: Newsreader;
+  font-size: 24px;
   font-weight: 400;
-  line-height: 20px;
-  letter-spacing: -0.4000000059604645px;
-  text-align: left;
-  color: #4d4c4c;
+  line-height: 32px;
+  text-align: right;
+  color: #051a38;
 }
 
 .new-order > button {
   width: 100%;
-  height: 40px;
-  background: #fae6bb;
+  height: 52px;
+  padding: 12px 16px;
+  background: #051a38;
   border: none;
   border-radius: 3px;
   display: flex;
@@ -212,10 +213,9 @@ export default defineComponent({
 .new-order > button span {
   font-family: Newsreader;
   font-size: 20px;
-  font-weight: 500;
-  line-height: 40px;
-  letter-spacing: -0.4000000059604645px;
-  color: #051a38;
+  font-weight: 400;
+  line-height: 28px;
+  color: #fff;
 }
 
 .flex-between {
