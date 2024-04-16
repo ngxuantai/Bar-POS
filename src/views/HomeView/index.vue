@@ -19,7 +19,7 @@
             class="tabs-container"
             size="small"
           >
-            <tab-pane key="1" tab="Recommend">
+            <tab-pane key="1" tab="Recommend" style="overflow-y: auto">
               <a-row :gutter="[0, 32]" style="width: 100%">
                 <a-col v-for="item in 2" :key="item.toString()" :span="12">
                   <card-item />
