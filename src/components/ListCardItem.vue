@@ -114,6 +114,11 @@ export default {
   color: #fff;
   align-content: center;
   position: relative;
+  font-family: Newsreader;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  text-align: center;
 }
 
 .list-option {

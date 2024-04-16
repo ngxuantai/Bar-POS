@@ -1,58 +1,114 @@
 <template>
-  <div class="sidebar-category">
+  <div class="sider-category">
     <div class="logo">
-      <p>Logo</p>
+      <img src="../assets/image/logo.png" alt="logo" />
     </div>
-    <div
-      class="list-category"
-      v-for="category in listCategory"
-      :key="category.id"
-    >
-      <div class="item-category">
-        <div class="img-container">
-          <img src="../assets/image/wine-nav.png" alt="wine" />
-        </div>
-        <div class="content">
-          <h4>{{ category.name }}</h4>
-          <p>{{ category.description }}</p>
-        </div>
-      </div>
-    </div>
+    <!-- <div class="menu">
+      <ul class="menu-list">
+        <li class="menu-item">
+          <div class="menu-link" @click="showSubMenu">
+            <span class="menu-label">1</span>
+            <span class="menu-expand">+</span>
+          </div>
+          <ul class="submenu" v-if="show">
+            <li class="submenu-item">
+              <a class="submenu-link"> 12 </a>
+            </li>
+            <li class="submenu-item">
+              <a class="submenu-link"> 13 </a>
+            </li>
+            <li class="submenu-item">
+              <a class="submenu-link"> 14 </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div> -->
+    <sub-menu :items="items" />
   </div>
 </template>
 
 <script lang="ts">
+import { ref } from "vue";
+import SubMenu from "./SubMenu.vue";
+
+interface Item {
+  key: string;
+  title: string;
+  show: boolean;
+  children: SubItem[];
+}
+interface SubItem {
+  key: string;
+  label: string;
+  check: boolean;
+}
+
 export default {
+  components: {
+    SubMenu,
+    // MenuItem,
+  },
   setup() {
-    const listCategory = [
+    const items = ref<Item[]>([
       {
-        id: 1,
-        name: "Red Wine",
-        description: "Bold & Smooth",
+        key: "1",
+        title: "Whisky",
+        show: false,
+        children: [
+          { key: "1", label: "Single Male Whisky", check: false },
+          { key: "2", label: "Hush Whisky", check: false },
+          { key: "3", label: "American Whisky", check: false },
+          { key: "4", label: "Blended Whisky", check: false },
+        ],
       },
       {
-        id: 2,
-        name: "White Wine",
-        description: "Light & Crisp",
+        key: "2",
+        title: "Classic Cocktails",
+        show: false,
+        children: [
+          { key: "1", label: "Single Male Whisky", check: false },
+          { key: "2", label: "Hush Whisky", check: false },
+          { key: "3", label: "American Whisky", check: false },
+          { key: "4", label: "Blended Whisky", check: false },
+        ],
       },
       {
-        id: 3,
-        name: "Champagne",
-        description: "Bubbly & Festive",
+        key: "3",
+        title: "Wines",
+        show: false,
+        children: [
+          { key: "1", label: "Single Male Whisky", check: false },
+          { key: "2", label: "Hush Whisky", check: false },
+          { key: "3", label: "American Whisky", check: false },
+          { key: "4", label: "Blended Whisky", check: false },
+        ],
       },
       {
-        id: 4,
-        name: "Sparkling",
-        description: "Fizzy & Fun",
+        key: "4",
+        title: "Beers",
+        show: false,
+        children: [
+          { key: "1", label: "Single Male Whisky", check: false },
+          { key: "2", label: "Hush Whisky", check: false },
+          { key: "3", label: "American Whisky", check: false },
+          { key: "4", label: "Blended Whisky", check: false },
+        ],
       },
       {
-        id: 5,
-        name: "Rosé",
-        description: "Pink & Refreshing",
+        key: "5",
+        title: "Jusices & Water",
+        show: false,
+        children: [
+          { key: "1", label: "Single Male Whisky", check: false },
+          { key: "2", label: "Hush Whisky", check: false },
+          { key: "3", label: "American Whisky", check: false },
+          { key: "4", label: "Blended Whisky", check: false },
+        ],
       },
-    ];
+    ]);
     return {
-      listCategory,
+      items,
     };
   },
 };
@@ -60,32 +116,29 @@ export default {
 
 <style scoped>
 .sider-category {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0px;
+  padding: 24px 16px 0 16px;
 }
 
 .logo {
   width: 100%;
-  height: 177px;
-  padding: 24px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 82px;
+  padding: 7px 122px 7px 24px;
+  margin-bottom: 36px;
 }
-.logo p {
-  font-family: Merriweather;
-  font-size: 40px;
-  font-weight: 400;
-  background: linear-gradient(
-    268.43deg,
-    #fdeec3 3.58%,
-    #efdcac 49.93%,
-    #dcc29e 98.97%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+
+.logo img {
+  width: 81px;
+  height: auto;
+  object-fit: cover;
+}
+
+.submenu-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+.submenu-container .ant-menu {
+  background-color: #000;
+  /* color: #fff; */
 }
 
 .item-category {
@@ -102,6 +155,7 @@ export default {
   height: 54px;
   position: relative;
 }
+
 .img-container img {
   width: auto;
   height: 66px;
@@ -117,6 +171,7 @@ export default {
   gap: 4px;
   color: #ffffff;
 }
+
 .content h4 {
   font-family: Merriweather;
   font-size: 20px;
@@ -124,6 +179,7 @@ export default {
   margin: 0;
   line-height: 26px;
 }
+
 .content p {
   font-family: Inter;
   font-size: 12px;
