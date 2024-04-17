@@ -351,6 +351,7 @@ export default defineComponent({
   gap: 24px;
   div {
     width: 274px;
+    height: 40px;
     padding: 0 8px;
     display: flex;
     align-items: center;

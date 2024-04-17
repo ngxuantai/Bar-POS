@@ -5,16 +5,15 @@
     <div class="login-container">
       <div class="member">
         <p>Exclusive pricing benefits for our members</p>
-        <a-input placeholder="Member ID" :bordered="false" class="member-id">
-          <template #prefix>
-            <img src="../../assets/icon/Edit.png" alt="edit" />
-          </template>
-        </a-input>
-        <a-button><span>Continue as Member</span></a-button>
+        <div class="member-id">
+          <img src="../../assets/icon/Edit.png" alt="edit" />
+          <a-input placeholder="Member ID" :bordered="false" />
+        </div>
+        <a-button>Continue as Member</a-button>
       </div>
-      <div>or</div>
+      <div>Or</div>
       <div class="guest">
-        <a-button><span>Continue as Guest</span></a-button>
+        <a-button>Continue as Guest</a-button>
         <div class="register">
           <p>
             Interested in being our member?
@@ -27,6 +26,6 @@
   </div>
 </template>
 
-<style scoped>
-@import "./style.css";
+<style lang="scss" scoped>
+@import "./style.scss";
 </style>

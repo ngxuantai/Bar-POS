@@ -5,49 +5,51 @@
       <sidebar-category />
     </a-layout-sider>
     <a-layout class="layout-container">
-      <div class="search">
-        <a-input placeholder="Search for wine" class="search-input">
-          <template #prefix>
-            <search-outlined />
-          </template>
-        </a-input>
+      <search-header :listTabs="listTabs" @selectTab="changeTab" />
+      <div v-for="tab in listTabs" :key="tab.id">
+        <list-card-item v-if="tab.id === 1 && tab.isActive" />
       </div>
-      <a-tabs v-model:activeKey="activeKey" class="tabs-container" size="small">
-        <tab-pane key="1" tab="Today's special">
-          <list-card-item />
-        </tab-pane>
-        <tab-pane key="2" tab="Customer Favorite">
-          <h1 style="color: #fff">111111111111111</h1>
-        </tab-pane>
-        <tab-pane key="3" tab="Discounts"> Content of Tab Pane 3 </tab-pane>
-      </a-tabs>
     </a-layout>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
-import { TabPane } from "ant-design-vue";
-import { SearchOutlined } from "@ant-design/icons-vue";
+import { ref, reactive } from "vue";
 import SidebarCategory from "@/components/SidebarCategory.vue";
+import SearchHeader from "@/components/SearchHeader.vue";
 import ListCardItem from "@/components/ListCardItem.vue";
+
+interface Tab {
+  id: number;
+  title: string;
+  isActive: boolean;
+}
 
 export default {
   components: {
-    TabPane,
-    SearchOutlined,
     SidebarCategory,
+    SearchHeader,
     ListCardItem,
   },
   setup() {
-    const activeKey = ref("1");
+    const listTabs = reactive<Tab[]>([
+      { id: 1, title: "Today's special", isActive: true },
+      { id: 2, title: "Customer Favorite", isActive: false },
+      { id: 3, title: "Discounts", isActive: false },
+    ]);
+    const changeTab = (tab: Tab) => {
+      listTabs.forEach((item) => {
+        item.isActive = item.id === tab.id;
+      });
+    };
     return {
-      activeKey,
+      listTabs,
+      changeTab,
     };
   },
 };
 </script>
 
-<style scoped>
-@import "./style.css";
+<style lang="scss" scoped>
+@import "./style.scss";
 </style>

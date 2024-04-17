@@ -7,17 +7,15 @@
         <img src="../../assets/image/logo.png" alt="logo" />
       </div>
       <div class="title-container">
-        <div class="title">
-          <h1>
-            Where <span>good drinks</span> and <span>good times</span> collide
-          </h1>
-          <p>
-            Ready for good drinks and good times?
-            <br />
-            We've got you covered!
-          </p>
-        </div>
-        <a-button @click="login"><span>Order now</span></a-button>
+        <h1>
+          Where <span>good drinks</span> and <span>good times</span> collide
+        </h1>
+        <p>
+          Ready for good drinks and good times?
+          <br />
+          We've got you covered!
+        </p>
+        <a-button @click="login">Order now</a-button>
       </div>
     </div>
   </div>
@@ -44,5 +42,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import "./style.css";
+@import "./style.scss";
 </style>

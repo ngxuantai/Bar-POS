@@ -10,28 +10,21 @@
           }"
           @click="showSubMenu(items, indexItem)"
         >
-          <span class="menu-label">{{ item.title }}</span>
-          <span class="menu-expand">
-            <template v-if="item.show">
-              <minus-outlined class="color-text-linear" />
-            </template>
-            <template v-else>
-              <plus-outlined />
-            </template>
-          </span>
+          <h3>{{ item.title }}</h3>
+          <template v-if="item.show">
+            <minus-outlined style="font-size: 12px; color: #efdcac" />
+          </template>
+          <template v-else>
+            <plus-outlined style="font-size: 12px" />
+          </template>
         </div>
         <ul class="submenu" v-if="item.show && item.children">
-          <li
-            v-for="(child, indexChlid) in item.children"
-            :key="child.key"
-            class="submenu-item"
-          >
+          <li v-for="(child, indexChlid) in item.children" :key="child.key">
             <custom-checkbox
               :status="child.check"
               @check="checkChild(items, indexChlid, indexItem)"
             />
-            <a
-              class="submenu-link"
+            <p
               :class="{
                 'color-text-linear': child.check,
                 'color-text-white': !child.check,
@@ -39,7 +32,7 @@
               @click="checkChild(items, indexChlid, indexItem)"
             >
               {{ child.label }}
-            </a>
+            </p>
           </li>
         </ul>
       </li>
@@ -117,7 +110,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .menu {
   display: flex;
   flex-direction: column;
@@ -138,16 +131,44 @@ export default {
 }
 
 .menu-title {
+  width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   text-decoration: none;
   background: #000;
-  font-family: Newsreader;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 28px;
-  text-align: left;
+  h3 {
+    font-family: Newsreader;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    text-align: left;
+    margin: 0;
+  }
+}
+
+.submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  li {
+    height: 54px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    p {
+      color: #fff;
+      text-decoration: none;
+      font-family: Newsreader;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      text-align: left;
+      margin: 0;
+      margin-left: 14px;
+    }
+  }
 }
 
 .color-text-white {
@@ -162,41 +183,5 @@ export default {
   );
   background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-.menu-label {
-  font-size: 16px;
-}
-
-.menu-expand {
-  margin-left: auto;
-  font-size: 14px;
-}
-
-.menu-item.active .menu-expand {
-  transform: rotate(90deg);
-}
-
-.submenu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.submenu-item {
-  height: 54px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.submenu-link {
-  color: #fff;
-  text-decoration: none;
-  font-family: Newsreader;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  text-align: left;
 }
 </style>

@@ -92,31 +92,29 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .items-container {
   width: 100%;
   min-width: 516px;
   padding: 4px 70px 0 70px;
   display: flex;
   flex-direction: column;
-}
-
-.sort {
-  display: flex;
-  height: 50px;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 16px;
-}
-
-.sort > h3 {
-  color: #ffffff;
-  font-family: Newsreader;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 26px;
-  text-align: center;
-  margin: 0;
+  .sort {
+    display: flex;
+    height: 50px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+    h3 {
+      color: #ffffff;
+      font-family: Newsreader;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 26px;
+      text-align: center;
+      margin: 0;
+    }
+  }
 }
 
 .custom-select {
@@ -148,26 +146,17 @@ export default {
   background: #181818;
   width: 251px;
   border-radius: 6px;
+  .option {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 16px 24px;
+    color: #fff;
+    height: 54px;
+    border-radius: 6px;
+    &:hover {
+      background: #434343;
+    }
+  }
 }
-.option {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 16px 24px;
-  color: #fff;
-  height: 54px;
-  border-radius: 6px;
-}
-
-.option:hover {
-  background: #434343;
-}
-
-/* .custom-select option {
-  background: #262626;
-  color: #fff;
-  border: none;
-  width: 251px;
-  height: 54px;
-} */
 </style>
