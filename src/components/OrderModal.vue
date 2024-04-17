@@ -58,10 +58,6 @@
               <p class="real-price">$300</p>
             </div>
           </div>
-          <!-- <div class="flex-between">
-            <h3 id="total">Total</h3>
-            <h3 id="toatl-price">$1000</h3>
-          </div> -->
         </div>
         <div class="notes">
           <div>
@@ -178,9 +174,8 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .modal {
-  /* display: none; */
   position: fixed;
   z-index: 9999;
   left: 0;
@@ -218,89 +213,41 @@ export default defineComponent({
 .infor-container {
   display: flex;
   gap: 12px;
-}
-
-.img-container {
-  width: 79px;
-  height: 98px;
-}
-.img-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.infor {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 12px;
-  font-family: Merriweather;
-  letter-spacing: -0.4000000059604645px;
-}
-
-.infor h2 {
-  font-family: Newsreader;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 28px;
-  text-align: left;
-  margin: 0;
-  color: #051a38;
-}
-
-.infor p {
-  font-family: Newsreader;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  text-align: left;
-  color: #595959;
-}
-
-.infor h4 span {
-  font-size: 28px;
-  font-weight: 400;
-  line-height: 20px;
-  text-align: left;
-  color: #051a38;
-}
-
-.detail {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.detail div {
-  padding: 0 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.detail div > span {
-  font-family: Inter;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 20px;
-  letter-spacing: -0.4000000059604645px;
-  color: #7c7c7c;
-}
-
-.detail div img {
-  width: 18px;
-  height: 18px;
-}
-
-.detail div:nth-child(1),
-.detail div:nth-child(2) {
-  border-right: 1px solid #eeeded;
-}
-
-.detail div:nth-child(1) {
-  padding-left: 0;
+  .img-container {
+    width: 79px;
+    height: 98px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .infor {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 12px;
+    letter-spacing: -0.4000000059604645px;
+    h2,
+    p {
+      font-family: Newsreader;
+      margin: 0;
+      text-align: left;
+    }
+    h2 {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 28px;
+      color: #051a38;
+    }
+    p {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      color: #595959;
+    }
+  }
 }
 
 .select-container {
@@ -329,14 +276,15 @@ export default defineComponent({
 }
 
 .type {
+  margin-left: 26px;
   width: 170px;
-}
-.type span {
-  font-family: Newsreader;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 26px;
-  text-align: left;
+  span {
+    font-family: Newsreader;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    text-align: left;
+  }
 }
 
 .price,
@@ -359,54 +307,65 @@ export default defineComponent({
 .btn-change {
   display: flex;
   align-items: center;
+  button {
+    width: 26px;
+    height: 26px;
+    border-radius: 2px;
+    padding: 0;
+  }
+  > span {
+    width: 37px;
+    height: 36px;
+    padding: 12px 14px;
+    font-family: Newsreader;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    align-content: center;
+    color: #5b5b5b;
+  }
 }
-.btn-change button {
-  width: 26px;
-  height: 26px;
-  border-radius: 2px;
-  padding: 0;
-}
+
 .btn-disable {
   border: 1px solid #d9d9d9;
   color: #d9d9d9;
+  &:hover,
+  &:active {
+    border: 1px solid #d9d9d9;
+    color: #d9d9d9;
+  }
 }
 .btn-active {
   border: 1px solid #8c8c8c;
   color: #8c8c8c;
-}
-.btn-change > span {
-  width: 37px;
-  height: 36px;
-  padding: 12px 14px;
-  font-family: Newsreader;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 28px;
-  align-content: center;
-  color: #5b5b5b;
+  &:hover,
+  &:active {
+    border: 1px solid #8c8c8c;
+    color: #8c8c8c;
+  }
 }
 
 .notes {
   display: flex;
   justify-content: space-between;
   gap: 24px;
-}
-.notes div {
-  width: 274px;
-  padding: 0 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid #f0f0f0;
-}
-.notes div input {
-  padding: 0;
-  font-family: Newsreader;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  text-align: left;
-  color: #bfbfbf;
+  div {
+    width: 274px;
+    padding: 0 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #f0f0f0;
+    input {
+      padding: 0;
+      font-family: Newsreader;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      text-align: left;
+      color: #bfbfbf;
+    }
+  }
 }
 
 .total-container {
@@ -418,18 +377,18 @@ export default defineComponent({
 .discount,
 .total {
   height: 29px;
+  span {
+    font-family: Newsreader;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    text-align: left;
+    color: #484848;
+  }
 }
 
-.discount span,
-.total span {
-  font-family: Newsreader;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 26px;
-  text-align: left;
-  color: #484848;
-}
 .discount h4 {
+  margin: 0;
   font-family: Newsreader;
   font-size: 20px;
   font-weight: 400;
@@ -438,6 +397,7 @@ export default defineComponent({
   color: #3a3a3a;
 }
 .total h3 {
+  margin: 0;
   font-family: Newsreader;
   font-size: 24px;
   font-weight: 400;
@@ -451,34 +411,32 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   gap: 24px;
-}
-
-.add-cart,
-.order {
-  width: 247px;
-  height: 52px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: Newsreader;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 28px;
-}
-.add-cart {
-  border: 1px solid #051a38;
-  background: transparent;
-}
-.order {
-  border: none;
-  background: #051a38;
-  color: #ffffff;
-}
-.add-cart:hover {
-  color: #000000;
-}
-.order:hover {
-  color: #ffffff;
+  button {
+    width: 247px;
+    height: 52px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Newsreader;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+  }
+  .add-cart {
+    border: 1px solid #051a38;
+    background: transparent;
+    &:hover {
+      color: #000000;
+    }
+  }
+  .order {
+    border: none;
+    background: #051a38;
+    color: #ffffff;
+    &:hover {
+      color: #ffffff;
+    }
+  }
 }
 </style>

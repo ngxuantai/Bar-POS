@@ -39,7 +39,7 @@
             <h3>$2000</h3>
           </div>
           <div class="new-order">
-            <a-button><span>New order</span></a-button>
+            <a-button>New order</a-button>
           </div>
         </div>
       </div>
@@ -72,9 +72,10 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+$font-family: "Newsreader";
+
 .modal {
-  /* display: none; */
   position: fixed;
   z-index: 9999;
   left: 0;
@@ -118,7 +119,7 @@ export default defineComponent({
   justify-content: flex-end;
 }
 .success span {
-  font-family: Newsreader;
+  font-family: $font-family;
   font-size: 24px;
   font-weight: 400;
   line-height: 32px;
@@ -131,7 +132,7 @@ export default defineComponent({
   align-items: center;
 }
 .title-name {
-  font-family: Newsreader;
+  font-family: $font-family;
   font-size: 16px;
   font-weight: 400;
   line-height: 26px;
@@ -169,22 +170,22 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-.item h4 {
-  font-family: Newsreader;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 22px;
-  text-align: left;
-  color: #afafaf;
-}
-.item p {
-  font-family: Newsreader;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 26px;
-  text-align: left;
-  color: #afafaf;
+  h4,
+  p {
+    margin: 0;
+    font-family: $font-family;
+    font-weight: 400;
+    text-align: left;
+    color: #afafaf;
+  }
+  h4 {
+    font-size: 14px;
+    line-height: 22px;
+  }
+  p {
+    font-size: 16px;
+    line-height: 26px;
+  }
 }
 
 .total {
@@ -199,23 +200,25 @@ export default defineComponent({
   color: #051a38;
 }
 
-.new-order > button {
+.new-order button {
   width: 100%;
   height: 52px;
   padding: 12px 16px;
   background: #051a38;
   border: none;
   border-radius: 3px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.new-order > button span {
-  font-family: Newsreader;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  font-family: $font-family;
   font-size: 20px;
   font-weight: 400;
   line-height: 28px;
   color: #fff;
+  &:hover,
+  &:focus {
+    color: #fff;
+  }
 }
 
 .flex-between {
