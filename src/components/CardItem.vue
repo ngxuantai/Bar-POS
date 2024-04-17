@@ -9,17 +9,17 @@
         <div class="first-row">
           <div>
             <img src="../assets/icon/Glass.png" alt="glass" />
-            150ml
+            150ml glass
           </div>
           <div>
             <img src="../assets/icon/Bottle.png" alt="bottle" />
-            750ml
+            500ml bottle
           </div>
         </div>
         <div class="second-row">
           <div>
             <img src="../assets/icon/Bottle.png" alt="bottle" />
-            150ml
+            500ml bottle
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@ export default {
 <style scoped>
 .card-container {
   width: 100%;
-  height: 397px;
+  min-height: 397px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -87,7 +87,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   padding: 0 12px;
 }
 
@@ -102,9 +102,10 @@ export default {
 }
 
 .detail {
+  min-height: 46px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 
 .first-row {

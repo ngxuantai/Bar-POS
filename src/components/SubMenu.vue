@@ -26,11 +26,9 @@
             :key="child.key"
             class="submenu-item"
           >
-            <input
-              :id="'checkbox_' + indexChlid"
-              type="checkbox"
-              :checked="child.check"
-              @change="checkChild(items, indexChlid, indexItem)"
+            <custom-checkbox
+              :status="child.check"
+              @check="checkChild(items, indexChlid, indexItem)"
             />
             <a
               class="submenu-link"
@@ -38,6 +36,7 @@
                 'color-text-linear': child.check,
                 'color-text-white': !child.check,
               }"
+              @click="checkChild(items, indexChlid, indexItem)"
             >
               {{ child.label }}
             </a>
@@ -51,6 +50,7 @@
 <script lang="ts">
 import { ref } from "vue";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
+import CustomCheckbox from "./CustomCheckbox.vue";
 
 interface Item {
   key: string;
@@ -74,6 +74,7 @@ export default {
   components: {
     PlusOutlined,
     MinusOutlined,
+    CustomCheckbox,
   },
   setup() {
     const show = ref<boolean>(false);
@@ -163,11 +164,6 @@ export default {
   -webkit-text-fill-color: transparent;
 }
 
-.menu-icon {
-  margin-right: 10px;
-  font-size: 18px;
-}
-
 .menu-label {
   font-size: 16px;
 }
@@ -175,7 +171,6 @@ export default {
 .menu-expand {
   margin-left: auto;
   font-size: 14px;
-  transition: transform 0.2s ease-in-out;
 }
 
 .menu-item.active .menu-expand {

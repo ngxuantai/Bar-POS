@@ -19,10 +19,10 @@
         </div>
         <div class="select-container">
           <div class="flex-row-start" style="padding: 0 16px">
-            <input type="checkbox" v-model="checkBottle" />
+            <custom-checkbox />
             <div class="select-quantity">
               <div class="type flex-row-start">
-                <img src="../assets/icon/BeerBottle.png" alt="beerbottle" />
+                <img src="../assets/icon/bottle-white.png" alt="bottle" />
                 <span>750 ml bottle</span>
               </div>
               <p class="price">$1000</p>
@@ -39,11 +39,11 @@
             </div>
           </div>
           <div class="flex-row-start" style="padding: 0 16px">
-            <input type="checkbox" v-model="checkBottle" />
+            <custom-checkbox />
             <div class="select-quantity">
               <div class="type flex-row-start">
-                <img src="../assets/icon/BeerBottle.png" alt="beerbottle" />
-                <span>750 ml bottle</span>
+                <img src="../assets/icon/glass-white.png" alt="glass" />
+                <span>150 ml glass</span>
               </div>
               <p class="price">$300</p>
               <div class="btn-change">
@@ -109,6 +109,7 @@ import {
   EditOutlined,
   GiftOutlined,
 } from "@ant-design/icons-vue";
+import CustomCheckbox from "./CustomCheckbox.vue";
 
 export default defineComponent({
   props: {
@@ -123,6 +124,7 @@ export default defineComponent({
     MinusOutlined,
     EditOutlined,
     GiftOutlined,
+    CustomCheckbox,
   },
   setup(props, { emit }) {
     const checkBottle = ref<boolean>(false);

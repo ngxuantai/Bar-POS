@@ -3,27 +3,6 @@
     <div class="logo">
       <img src="../assets/image/logo.png" alt="logo" />
     </div>
-    <!-- <div class="menu">
-      <ul class="menu-list">
-        <li class="menu-item">
-          <div class="menu-link" @click="showSubMenu">
-            <span class="menu-label">1</span>
-            <span class="menu-expand">+</span>
-          </div>
-          <ul class="submenu" v-if="show">
-            <li class="submenu-item">
-              <a class="submenu-link"> 12 </a>
-            </li>
-            <li class="submenu-item">
-              <a class="submenu-link"> 13 </a>
-            </li>
-            <li class="submenu-item">
-              <a class="submenu-link"> 14 </a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </div> -->
     <sub-menu :items="items" />
   </div>
 </template>
