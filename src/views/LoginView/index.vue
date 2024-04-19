@@ -9,7 +9,7 @@
           <img src="../../assets/icon/Edit.png" alt="edit" />
           <a-input placeholder="Member ID" :bordered="false" />
         </div>
-        <a-button>Continue as Member</a-button>
+        <a-button @click="navigateHome">Continue as Member</a-button>
       </div>
       <div>Or</div>
       <div class="guest">
@@ -25,6 +25,24 @@
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { useRouter } from "vue-router";
+
+export default {
+  setup() {
+    const router = useRouter();
+
+    const navigateHome = () => {
+      router.push("/home");
+    };
+
+    return {
+      navigateHome,
+    };
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 @import "./style.scss";

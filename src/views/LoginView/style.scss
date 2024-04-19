@@ -86,22 +86,23 @@
   font-weight: 400;
   line-height: 28px;
   text-align: center;
-  &:hover, &:focus-visible {
-    outline: none;
-  }
 }
 .member button {
   background: #051a38;
   color: #fff;
+  border: none;
   &:hover, &:focus-visible {
     color: #fff;
+    border: none;
   }
 }
 .guest button {
   background: transparent;
+  border: 1px solid #051A38;
   color: #051a38;
   &:hover, &:focus-visible {
     color: #051a38;
+    border-color: #051A38;
   }
 }
 

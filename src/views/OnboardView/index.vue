@@ -30,7 +30,6 @@ export default defineComponent({
     const router = useRouter();
 
     const login = () => {
-      console.log("login");
       router.push("/login");
     };
 
