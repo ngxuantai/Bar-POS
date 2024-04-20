@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import OnboardView from "../views/OnboardView/index.vue";
 import HomeView from "../views/HomeView/index.vue";
+import Layout from "@/views/layout.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -17,7 +18,14 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/home",
     name: "home",
-    component: HomeView,
+    component: Layout,
+    children: [
+      {
+        path: "",
+        name: "home",
+        component: HomeView,
+      },
+    ],
   },
   {
     path: "/detail-infor/:id",
