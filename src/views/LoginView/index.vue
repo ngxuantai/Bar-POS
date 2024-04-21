@@ -1,10 +1,15 @@
 <template>
   <div class="container">
-    <div class="backgroundlay"></div>
+    <div class="backgroundlay">
+      <img src="../../assets/image/onboard.png" alt="background" />
+    </div>
     <div class="overlay"></div>
     <div class="login-container">
       <div class="member">
-        <p>Exclusive pricing benefits for our members</p>
+        <p>
+          Exclusive pricing benefits for our
+          <span class="highlight">members</span>
+        </p>
         <div class="member-id">
           <img src="../../assets/icon/Edit.png" alt="edit" />
           <a-input placeholder="Member ID" :bordered="false" />
