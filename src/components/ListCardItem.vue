@@ -18,7 +18,12 @@
       </div>
     </div>
     <a-row :gutter="[48, 50]" style="margin: 50px 0">
-      <a-col v-for="item in 4" :key="item.toString()" :span="24 / colCount">
+      <a-col
+        v-for="item in 4"
+        :key="item.toString()"
+        :span="24 / colCount"
+        @click="navigateDeatilView"
+      >
         <card-item />
       </a-col>
       <a-col v-for="item in 4" :key="item.toString()" :span="24 / colCount">
@@ -30,6 +35,7 @@
 
 <script lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { useRouter } from "vue-router";
 import { DownOutlined } from "@ant-design/icons-vue";
 import CardItem from "./CardItem.vue";
 interface Option {
@@ -43,6 +49,7 @@ export default {
     CardItem,
   },
   setup() {
+    const router = useRouter();
     const itemsContainerRef = ref<HTMLElement | null>(null);
     const colCount = ref<number>(4);
     const show = ref<boolean>(false);
@@ -79,6 +86,9 @@ export default {
       const maxColCount = Math.floor((width as number) / 280);
       colCount.value = Math.max(minColCount, maxColCount);
     };
+    const navigateDeatilView = () => {
+      router.push("/detail-infor/1");
+    };
     return {
       itemsContainerRef,
       colCount,
@@ -87,6 +97,7 @@ export default {
       options,
       toggleShow,
       selectOption,
+      navigateDeatilView,
     };
   },
 };

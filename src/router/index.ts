@@ -30,10 +30,17 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/detail-infor/:id",
     name: "detail-infor",
-    component: () =>
-      import(
-        /* webpackChunkName: "about" */ "../views/DetailInforView/index.vue"
-      ),
+    component: Layout,
+    children: [
+      {
+        path: "",
+        name: "detail-infor",
+        component: () =>
+          import(
+            /* webpackChunkName: "login" */ "../views/DetailInforView/index.vue"
+          ),
+      },
+    ],
   },
 ];
 

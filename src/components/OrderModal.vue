@@ -22,7 +22,7 @@
             <custom-checkbox />
             <div class="select-quantity">
               <div class="type flex-row-start">
-                <img src="../assets/icon/bottle-white.png" alt="bottle" />
+                <img src="../assets/icon/bottle-black.png" alt="bottle" />
                 <span>750 ml bottle</span>
               </div>
               <p class="price">$1000</p>
@@ -42,7 +42,7 @@
             <custom-checkbox />
             <div class="select-quantity">
               <div class="type flex-row-start">
-                <img src="../assets/icon/glass-white.png" alt="glass" />
+                <img src="../assets/icon/glass-black.png" alt="glass" />
                 <span>150 ml glass</span>
               </div>
               <p class="price">$300</p>

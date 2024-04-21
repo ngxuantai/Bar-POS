@@ -1,0 +1,266 @@
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.wine-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  padding: 20px 70px 150px 70px;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.back {
+  display: flex;;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 13px;
+  p {
+    margin: 0;
+    font-weight: 400;
+    &:nth-child(1) {
+      font-family: Newsreader;
+      font-size: 16px;
+      line-height: 26px;
+      color: #8c8c8c;
+    }
+    &:nth-child(2) {
+      font-family: Inter;
+      font-size: 14px;
+      line-height: 22px;
+      color: #8c8c8c;
+    }
+    &:nth-child(3) {
+      font-family: Merriweather;
+      font-size: 16px;
+      line-height: 26px;
+      color: #fff;
+    }
+  }
+}
+
+.wine-infor {
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.img-container {
+  width: 335px;
+  height: 488px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.information {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  justify-content: flex-end;
+  align-content: flex-end;
+}
+
+.infor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  h3, p {
+    margin: 0;
+    font-family: Newsreader;
+    font-weight: 400;
+    text-align: left;
+  }
+  h3 {
+    font-size: 30px;
+    line-height: 38px;
+    color: #fff;
+  }
+  p {
+    font-size: 16px;
+    line-height: 26px;
+    color: #fafafa;
+  }
+}
+
+.select-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  .select-row {
+    height: 68px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.flex-row-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.select-quantity {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.type {
+  margin-left: 26px;
+  width: 170px;
+  span {
+    font-family: Newsreader;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    text-align: left;
+    color: #fff;
+  }
+}
+
+.price,
+.real-price {
+  width: 70px;
+  margin: 0;
+  font-family: Newsreader;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  text-align: left;
+}
+
+.checked-text {
+  color: #fff;
+}
+.checked-backfround {
+  background-color: #181818;
+}
+
+.unchecked-text {
+  color: #8c8c8c;
+}
+
+.btn-change {
+  display: flex;
+  align-items: center;
+  button {
+    width: 26px;
+    height: 26px;
+    border-radius: 2px;
+    padding: 0;
+    background: transparent;
+  }
+  > span {
+    width: 37px;
+    height: 36px;
+    padding: 12px 14px;
+    font-family: Newsreader;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    align-content: center;
+  }
+}
+
+.btn-disable {
+  border: 1px solid #8c8c8c;
+  color: #8c8c8c;
+}
+.btn-active {
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
+.add-cart {
+  width: 100%;
+  height: 52px;
+  button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: linear-gradient(268.43deg, #FDEEC3 3.58%, #EFDCAC 49.93%, #DCC29E 98.97%);
+    font-family: Newsreader;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    text-align: center;
+  }
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: flex-start;
+  h3 {
+    margin: 0;
+    font-family: Newsreader;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 38px;
+    text-align: left;
+    color: #fff;
+  }
+  .detail {
+    height: 58px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border: 1px solid #595959;
+    .detail-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      span {
+        font-family: Newsreader;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 26px;
+        text-align: left;
+        color: #fff;
+      }
+    }
+    .detail-content:nth-child(-n+4) {
+      border-right: 1px solid #595959;
+    }
+  }
+  p {
+    margin: 0;
+    font-family: Newsreader;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    text-align: left;
+    color: #fff;
+  }
+}
+
+.similar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  h3 {
+    margin: 0;
+    font-family: Newsreader;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 38px;
+    text-align: left;
+    color: #fff;
+  }
+  .list-items {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0 48px;
+  }
+}
