@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <div class="backgroundlay"></div>
+    <div class="backgroundlay">
+      <img src="../../assets/image/onboard.png" alt="background" />
+    </div>
     <div class="overlay"></div>
     <div class="brand">
       <div class="logo">
