@@ -199,7 +199,7 @@ export default defineComponent({
 .title {
   width: 100%;
   display: flex;
-  align-items: flex-end;
+  justify-content: flex-end;
   margin-bottom: 7px;
 }
 

@@ -18,12 +18,7 @@
       </div>
     </div>
     <a-row :gutter="[48, 50]" style="margin: 50px 0">
-      <a-col
-        v-for="item in 4"
-        :key="item.toString()"
-        :span="24 / colCount"
-        @click="navigateDeatilView"
-      >
+      <a-col v-for="item in 4" :key="item.toString()" :span="24 / colCount">
         <card-item />
       </a-col>
       <a-col v-for="item in 4" :key="item.toString()" :span="24 / colCount">
@@ -86,9 +81,6 @@ export default {
       const maxColCount = Math.floor((width as number) / 280);
       colCount.value = Math.max(minColCount, maxColCount);
     };
-    const navigateDeatilView = () => {
-      router.push("/detail-infor/1");
-    };
     return {
       itemsContainerRef,
       colCount,
@@ -97,7 +89,6 @@ export default {
       options,
       toggleShow,
       selectOption,
-      navigateDeatilView,
     };
   },
 };

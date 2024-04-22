@@ -1,9 +1,9 @@
 <template>
   <div class="card-container">
-    <div class="img-container">
+    <div class="img-container" @click="navigateDeatilView">
       <img src="../assets/image/item-card-image.png" alt="item-image" />
     </div>
-    <div class="content">
+    <div class="content" @click="navigateDeatilView">
       <h4>60 Sessantanni Limited Edition Italia champagne</h4>
       <div class="detail">
         <div class="first-row">
@@ -41,6 +41,7 @@
 
 <script lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import OrderModal from "./OrderModal.vue";
 import SuccessModal from "./SuccessModal.vue";
 
@@ -50,11 +51,17 @@ export default {
     SuccessModal,
   },
   setup() {
+    const router = useRouter();
     const showOdering = ref<boolean>(false);
     const shwoPurchase = ref<boolean>(false);
+
+    const navigateDeatilView = () => {
+      router.push("/detail-infor/1");
+    };
     return {
       showOdering,
       shwoPurchase,
+      navigateDeatilView,
     };
   },
 };
