@@ -19,43 +19,79 @@
         </div>
         <div class="select-container">
           <div class="flex-row-start" style="padding: 0 16px">
-            <custom-checkbox />
+            <custom-checkbox
+              :status="bottle.check"
+              @change="bottle.check = !bottle.check"
+            />
             <div class="select-quantity">
               <div class="type flex-row-start">
                 <img src="../assets/icon/bottle-black.png" alt="bottle" />
                 <span>750 ml bottle</span>
               </div>
-              <p class="price">$1000</p>
+              <p class="price">${{ bottle.price }}</p>
               <div class="btn-change">
-                <a-button @click="subBottle" class="btn-disable">
+                <a-button
+                  @click="changeBottle(-1)"
+                  :class="{
+                    'btn-disable':
+                      bottle.quantity === 0 || bottle.check === false,
+                    'btn-active': bottle.quantity > 0 || bottle.check === true,
+                  }"
+                  :disabled="bottle.quantity === 0 || bottle.check === false"
+                >
                   <minus-outlined />
                 </a-button>
-                <span>{{ bottle }}</span>
-                <a-button @click="addBottle" class="btn-active">
+                <span>{{ bottle.quantity }}</span>
+                <a-button
+                  @click="changeBottle(1)"
+                  :class="{
+                    'btn-disable': bottle.check === false,
+                    'btn-active': bottle.check === true,
+                  }"
+                  :disabled="bottle.check == false"
+                >
                   <plus-outlined />
                 </a-button>
               </div>
-              <p class="real-price">$1000</p>
+              <p class="real-price">${{ bottle.price * bottle.quantity }}</p>
             </div>
           </div>
           <div class="flex-row-start" style="padding: 0 16px">
-            <custom-checkbox />
+            <custom-checkbox
+              :status="glass.check"
+              @change="glass.check = !glass.check"
+            />
             <div class="select-quantity">
               <div class="type flex-row-start">
                 <img src="../assets/icon/glass-black.png" alt="glass" />
                 <span>150 ml glass</span>
               </div>
-              <p class="price">$300</p>
+              <p class="price">${{ glass.price }}</p>
               <div class="btn-change">
-                <a-button @click="subGlass" class="btn-disable">
+                <a-button
+                  @click="changeGlass(-1)"
+                  :class="{
+                    'btn-disable':
+                      glass.quantity === 0 || glass.check === false,
+                    'btn-active': glass.quantity > 0 && glass.check === true,
+                  }"
+                  :disabled="glass.quantity === 0 || glass.check === false"
+                >
                   <minus-outlined />
                 </a-button>
-                <span>{{ glass }}</span>
-                <a-button @click="addGlass" class="btn-active">
+                <span>{{ glass.quantity }}</span>
+                <a-button
+                  @click="changeGlass(1)"
+                  :class="{
+                    'btn-disable': glass.check === false,
+                    'btn-active': glass.check === true,
+                  }"
+                  :disabled="glass.check === false"
+                >
                   <plus-outlined />
                 </a-button>
               </div>
-              <p class="real-price">$300</p>
+              <p class="real-price">${{ glass.price * glass.quantity }}</p>
             </div>
           </div>
         </div>
@@ -71,7 +107,7 @@
           <div>
             <gift-outlined style="color: #bfbfbf; font-size: 20px" />
             <a-input
-              v-model:value="notes"
+              v-model:value="promoCode"
               :bordered="false"
               placeholder="Add promo code"
             />
@@ -84,7 +120,11 @@
           </div>
           <div class="total flex-row-between">
             <span>Total</span>
-            <h3>$1000</h3>
+            <h3>
+              ${{
+                bottle.price * bottle.quantity + glass.price * glass.quantity
+              }}
+            </h3>
           </div>
         </div>
         <div class="cart">
@@ -97,7 +137,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, reactive } from "vue";
 import {
   CloseOutlined,
   PlusOutlined,
@@ -106,6 +146,12 @@ import {
   GiftOutlined,
 } from "@ant-design/icons-vue";
 import CustomCheckbox from "./CustomCheckbox.vue";
+
+interface Item {
+  check: boolean;
+  price: number;
+  quantity: number;
+}
 
 export default defineComponent({
   props: {
@@ -123,27 +169,24 @@ export default defineComponent({
     CustomCheckbox,
   },
   setup(props, { emit }) {
-    const checkBottle = ref<boolean>(false);
-    const bottle = ref<number>(0);
-    const checkGlass = ref<boolean>(false);
-    const glass = ref<number>(0);
+    const bottle = reactive<Item>({
+      check: false,
+      price: 1000,
+      quantity: 0,
+    });
+    const glass = reactive<Item>({
+      check: false,
+      price: 300,
+      quantity: 0,
+    });
     const notes = ref<string>("");
+    const promoCode = ref<string>("");
 
-    const subBottle = () => {
-      if (bottle.value > 0) {
-        bottle.value--;
-      }
+    const changeBottle = (number: number) => {
+      bottle.quantity += number;
     };
-    const addBottle = () => {
-      bottle.value++;
-    };
-    const subGlass = () => {
-      if (glass.value > 0) {
-        glass.value--;
-      }
-    };
-    const addGlass = () => {
-      glass.value++;
+    const changeGlass = (number: number) => {
+      glass.quantity += number;
     };
     const close = () => {
       emit("closeModal");
@@ -157,15 +200,12 @@ export default defineComponent({
       emit("closeModal");
     };
     return {
-      checkBottle,
       bottle,
-      checkGlass,
       glass,
       notes,
-      subBottle,
-      addBottle,
-      subGlass,
-      addGlass,
+      promoCode,
+      changeBottle,
+      changeGlass,
       close,
       addCart,
       order,
@@ -284,6 +324,7 @@ export default defineComponent({
     font-weight: 400;
     line-height: 26px;
     text-align: left;
+    color: #595959;
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="sider-category">
     <div class="logo">
-      <img src="../assets/image/logo.png" alt="logo" />
+      <img src="../assets/image/logo.png" alt="logo" @click="navigateHome" />
     </div>
     <sub-menu :items="items" />
   </div>
@@ -9,6 +9,7 @@
 
 <script lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import SubMenu from "./SubMenu.vue";
 
 interface Item {
@@ -28,6 +29,7 @@ export default {
     SubMenu,
   },
   setup() {
+    const router = useRouter();
     const items = ref<Item[]>([
       {
         key: "1",
@@ -85,8 +87,13 @@ export default {
         ],
       },
     ]);
+
+    const navigateHome = () => {
+      router.push("/home");
+    };
     return {
       items,
+      navigateHome,
     };
   },
 };

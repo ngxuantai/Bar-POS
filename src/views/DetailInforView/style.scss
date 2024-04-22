@@ -28,6 +28,10 @@
       font-size: 16px;
       line-height: 26px;
       color: #8c8c8c;
+      &:hover {
+        cursor: pointer;
+        color: #fff;
+      }
     }
     &:nth-child(2) {
       font-family: Inter;
@@ -93,7 +97,6 @@
 .select-container {
   display: flex;
   flex-direction: column;
-  gap: 14px;
   .select-row {
     height: 68px;
     padding: 0 16px;
@@ -175,10 +178,12 @@
 .btn-disable {
   border: 1px solid #8c8c8c;
   color: #8c8c8c;
+  cursor: not-allowed;
 }
 .btn-active {
   border: 1px solid #ffffff;
   color: #ffffff;
+  cursor: pointer;
 }
 
 .add-cart {
