@@ -93,7 +93,7 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 12px;
-  padding: 0 12px;
+  padding: 0;
   h4 {
     font-family: Newsreader;
     font-size: 16px;
@@ -156,6 +156,12 @@ export default {
       outline: none;
       color: #051a38;
     }
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .content {
+    padding: 0 12px;
   }
 }
 </style>

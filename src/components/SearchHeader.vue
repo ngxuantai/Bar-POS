@@ -61,15 +61,13 @@ export default defineComponent({
 }
 .search {
   height: 50px;
-  max-width: 518px;
-  width: 518px;
   padding: 15px 20px;
   display: flex;
   align-items: center;
   gap: 12px;
   background: #181818;
   span {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 400;
     text-align: center;
     color: #bfbfbf;
@@ -94,7 +92,7 @@ export default defineComponent({
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 40px;
+  gap: 24px;
   .item-tab {
     height: 100%;
     display: flex;
@@ -102,7 +100,7 @@ export default defineComponent({
     p {
       cursor: pointer;
       font-family: Newsreader;
-      font-size: 20px;
+      font-size: 16px;
       font-weight: 400;
       line-height: 28px;
       color: #bfbfbf;
@@ -127,6 +125,40 @@ export default defineComponent({
       );
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+  }
+}
+
+@media screen and (min-width: 1366px) {
+  .search {
+    width: 50%;
+    input {
+      font-size: 18px;
+    }
+  }
+  .tabs {
+    gap: 30px;
+    .item-tab {
+      p {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .search {
+    width: 518px;
+    input {
+      font-size: 16px;
+    }
+  }
+  .tabs {
+    gap: 40px;
+    .item-tab {
+      p {
+        font-size: 20px;
+      }
     }
   }
 }

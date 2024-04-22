@@ -50,24 +50,28 @@
 
 .wine-infor {
   display: flex;
-  gap: 40px;
+  gap: 30px;
   justify-content: space-between;
 }
 
 .img-container {
-  width: 335px;
-  height: 488px;
+  width: 35%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
   img {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    height: 80%;
     object-fit: cover;
   }
 }
 
 .information {
+  width: 60%;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 34px;
   justify-content: flex-end;
   align-content: flex-end;
 }
@@ -98,7 +102,7 @@
   display: flex;
   flex-direction: column;
   .select-row {
-    height: 68px;
+    height: 50px;
     padding: 0 16px;
     display: flex;
     align-items: center;
@@ -139,7 +143,12 @@
   font-size: 16px;
   font-weight: 400;
   line-height: 26px;
+}
+.price {
   text-align: left;
+}
+.real-price {
+  text-align: right;
 }
 
 .checked-text {
@@ -265,7 +274,50 @@
   }
   .list-items {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0 48px;
   }
 }
+
+@media screen and (min-width: 1366px) {
+  .wine-container {
+    > img {
+      height: 100%;
+    }
+  }
+  .similar {
+    .list-items {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0 30px;
+    }
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .img-container {
+    width: 335px;
+    height: 488px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .information {
+    gap: 40px;
+  }
+  .select-row {
+    height: 69px;
+  }
+  .price {
+    text-align: left;
+  }
+  .real-price {
+    text-align: left;
+  }
+  .similar {
+    .list-items {
+      gap: 0 48px;
+    }
+  }
+}
+

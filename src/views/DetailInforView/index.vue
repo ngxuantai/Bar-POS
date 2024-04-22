@@ -23,7 +23,6 @@
         <div class="select-container">
           <div
             class="select-row"
-            style="padding: 0 16px; height: 68px"
             :style="{
               background: bottle.check ? '#181818' : 'transparent',
             }"
@@ -49,8 +48,10 @@
                   @click="changeBottle(-1)"
                   :class="{
                     'btn-active': bottle.quantity > 0,
-                    'btn-disable': bottle.quantity === 0,
+                    'btn-disable':
+                      bottle.quantity === 0 || bottle.check === false,
                   }"
+                  :disabled="bottle.quantity === 0 || bottle.check === false"
                 >
                   <minus-outlined />
                 </button>
@@ -61,6 +62,7 @@
                     'btn-active': bottle.check === true,
                     'btn-disable': bottle.check === false,
                   }"
+                  :disabled="bottle.check === false"
                 >
                   <plus-outlined />
                 </button>
@@ -69,8 +71,7 @@
             </div>
           </div>
           <div
-            class="flex-row-start"
-            style="padding: 0 16px; height: 68px"
+            class="select-row"
             :style="{
               background: glass.check ? '#181818' : 'transparent',
             }"
@@ -95,9 +96,11 @@
                 <button
                   @click="changeGlass(-1)"
                   :class="{
+                    'btn-disable':
+                      glass.quantity === 0 && glass.check === false,
                     'btn-active': glass.quantity > 0,
-                    'btn-disable': glass.quantity === 0,
                   }"
+                  :disabled="glass.quantity === 0 || glass.check === false"
                 >
                   <minus-outlined />
                 </button>
@@ -108,6 +111,7 @@
                     'btn-active': glass.check === true,
                     'btn-disable': glass.check === false,
                   }"
+                  :disabled="glass.check === false"
                 >
                   <plus-outlined />
                 </button>
