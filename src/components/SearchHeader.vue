@@ -51,6 +51,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+$font-family: "Newsreader";
+$text-color: #bfbfbf;
+$selected-tab-gradient: linear-gradient(268.43deg, #FDEEC3 3.58%, #EFDCAC 49.93%, #DCC29E 98.97%);
+
 .header-container {
   height: 124px;
   display: flex;
@@ -70,7 +74,7 @@ export default defineComponent({
     font-size: 18px;
     font-weight: 400;
     text-align: center;
-    color: #bfbfbf;
+    color: $text-color;
   }
   input {
     width: 100%;
@@ -78,11 +82,11 @@ export default defineComponent({
     border: none;
     border-radius: 0;
     background: #181818;
-    font-family: Newsreader;
+    font-family: $font-family;
     font-size: 16px;
     font-weight: 400;
     line-height: 26px;
-    color: #bfbfbf;
+    color: $text-color;
     &:focus-visible {
       outline: none;
     }
@@ -99,30 +103,20 @@ export default defineComponent({
     align-items: center;
     p {
       cursor: pointer;
-      font-family: Newsreader;
+      font-family: $font-family;
       font-size: 16px;
       font-weight: 400;
       line-height: 28px;
-      color: #bfbfbf;
+      color: $text-color;
       margin: 0;
     }
   }
   .selected {
     border-bottom: 2px solid;
-    border-image-source: linear-gradient(
-      268.43deg,
-      #fdeec3 3.58%,
-      #efdcac 49.93%,
-      #dcc29e 98.97%
-    );
+    border-image-source: $selected-tab-gradient;
     border-image-slice: 1;
     p {
-      background: linear-gradient(
-        268.43deg,
-        #fdeec3 3.58%,
-        #efdcac 49.93%,
-        #dcc29e 98.97%
-      );
+      background: $selected-tab-gradient;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
