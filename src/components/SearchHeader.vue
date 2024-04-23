@@ -53,7 +53,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 $font-family: "Newsreader";
 $text-color: #bfbfbf;
-$selected-tab-gradient: linear-gradient(268.43deg, #FDEEC3 3.58%, #EFDCAC 49.93%, #DCC29E 98.97%);
+$selected-tab-gradient: linear-gradient(
+  268.43deg,
+  #fdeec3 3.58%,
+  #efdcac 49.93%,
+  #dcc29e 98.97%
+);
 
 .header-container {
   height: 124px;
