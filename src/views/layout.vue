@@ -10,15 +10,18 @@
     <a-layout class="layout-container">
       <router-view />
     </a-layout>
+    <cart />
   </a-layout>
 </template>
 
 <script lang="ts">
-import SidebarCategory from "@/components/SidebarCategory.vue";
+import SidebarCategory from "../components/SidebarCategory.vue";
+import Cart from "../components/Cart.vue";
 
 export default {
   components: {
     SidebarCategory,
+    Cart,
   },
 };
 </script>
