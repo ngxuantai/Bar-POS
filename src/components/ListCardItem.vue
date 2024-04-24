@@ -17,14 +17,9 @@
         </div>
       </div>
     </div>
-    <a-row :gutter="[48, 50]" style="margin: 50px 0">
-      <a-col v-for="item in 4" :key="item.toString()" :span="24 / colCount">
-        <card-item />
-      </a-col>
-      <a-col v-for="item in 4" :key="item.toString()" :span="24 / colCount">
-        <card-item />
-      </a-col>
-    </a-row>
+    <div class="list-items" v-if="listItems.length > 0">
+      <card-item v-for="item in listItems" :key="item.id" :data="item" />
+    </div>
   </div>
 </template>
 
@@ -33,6 +28,9 @@ import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { DownOutlined } from "@ant-design/icons-vue";
 import CardItem from "./CardItem.vue";
+import { getAllProducts } from "../composables/useCollection";
+import { DocumentData } from "firebase/firestore";
+import { ProductWithAttributes } from "types";
 interface Option {
   value: string;
   text: string;
@@ -50,21 +48,35 @@ export default {
     const show = ref<boolean>(false);
     const selected = ref<Option>({
       value: "option1",
-      text: "Lựa chọn 1",
+      text: "All products",
     });
+    const listItems = ref<DocumentData[]>([]);
     const options = [
-      { value: "option1", text: "Lựa chọn 1" },
-      { value: "option2", text: "Lựa chọn 2" },
-      { value: "option3", text: "Lựa chọn 3" },
+      { value: "option1", text: "All products" },
+      { value: "option2", text: "Latest" },
+      { value: "option3", text: "Price low to high" },
+      { value: "option4", text: "Price hight to low" },
     ];
 
-    onMounted(() => {
+    async function getProductsData() {
+      try {
+        const data = await getAllProducts("m1ubzXQssvMhhrFT1ZDj");
+        listItems.value = data.products.value;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    getProductsData();
+
+    onMounted(async () => {
       updateColCount();
       window.addEventListener("resize", updateColCount);
     });
 
-    onBeforeUnmount(() => {
+    onBeforeUnmount(async () => {
       window.removeEventListener("resize", updateColCount);
+      await getProductsData();
     });
 
     const toggleShow = () => {
@@ -87,6 +99,7 @@ export default {
       show,
       selected,
       options,
+      listItems,
       toggleShow,
       selectOption,
     };
@@ -160,5 +173,10 @@ export default {
       background: #434343;
     }
   }
+}
+.list-items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 50px 48px;
 }
 </style>

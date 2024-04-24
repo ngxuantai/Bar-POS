@@ -1,10 +1,10 @@
 <template>
   <search-header :listTabs="listTabs" @selectTab="changeTab" />
-  <div class="wine-container">
+  <div class="wine-container" v-if="item?.name && item">
     <div class="back">
       <p @click="navigateHome">Whisky</p>
       <p>/</p>
-      <p>60 Sessantanni Limited Edition Italia champagne</p>
+      <p>{{ item }}</p>
     </div>
     <div class="wine-infor">
       <div class="img-container">
@@ -12,13 +12,8 @@
       </div>
       <div class="information">
         <div class="infor">
-          <h3>
-            60 Sessantanni Limited Edition Italia champagne (24 Karat Gold)
-          </h3>
-          <p>
-            Full of the fragrant aroma of fruits mixed with plum and cherry jam.
-            The wine has a full-bodied, balanced flavor with smooth tannins
-          </p>
+          <h3>{{ item.name }}</h3>
+          <p>{{ item.description }}</p>
         </div>
         <div class="select-container">
           <div
@@ -40,7 +35,7 @@
             >
               <div class="type flex-row-start">
                 <img src="../../assets/icon/bottle-white.png" alt="bottle" />
-                <span>750 ml bottle</span>
+                <span>{{ bottle.volume }} ml bottle</span>
               </div>
               <p class="price">${{ bottle.price }}</p>
               <div class="btn-change">
@@ -67,7 +62,9 @@
                   <plus-outlined />
                 </button>
               </div>
-              <p class="real-price">${{ bottle.price * bottle.quantity }}</p>
+              <p class="real-price">
+                ${{ item.priceBottle * bottle.quantity }}
+              </p>
             </div>
           </div>
           <div
@@ -89,9 +86,9 @@
             >
               <div class="type flex-row-start">
                 <img src="../../assets/icon/glass-white.png" alt="glass" />
-                <span>150 ml glass</span>
+                <span>{{ item.volGlass }} ml glass</span>
               </div>
-              <p class="price">${{ glass.price }}</p>
+              <p class="price">${{ item.priceGlass }}</p>
               <div class="btn-change">
                 <button
                   @click="changeGlass(-1)"
@@ -116,7 +113,7 @@
                   <plus-outlined />
                 </button>
               </div>
-              <p class="real-price">${{ glass.price * glass.quantity }}</p>
+              <p class="real-price">${{ item.priceGlass * glass.quantity }}</p>
             </div>
           </div>
         </div>
@@ -159,24 +156,26 @@
       </p>
     </div>
     <div class="similar">
-      <h3>About the product</h3>
-      <div class="list-items">
+      <h3>Other similar products</h3>
+      <!-- <div class="list-items">
         <card-item />
         <card-item />
         <card-item />
         <card-item />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { reactive } from "vue";
-import { useRouter } from "vue-router";
+import { reactive, ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import SearchHeader from "../../components/SearchHeader.vue";
 import CustomCheckbox from "../../components/CustomCheckbox.vue";
-import CardItem from "../../components/CardItem.vue";
+// import CardItem from "../../components/CardItem.vue";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
+import { getProductsBySubCategory } from "../../composables/useCollection";
+import { DocumentData } from "firebase/firestore";
 
 interface Tab {
   id: number;
@@ -185,35 +184,78 @@ interface Tab {
 }
 
 interface Item {
-  check: boolean;
+  volume: number;
   price: number;
+  check: boolean;
   quantity: number;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  about: string;
+  id_category: string;
+}
+
+interface ProductWithAttributes extends Product {
+  attributes: Attribute[];
+}
+
+interface Attribute {
+  id: string;
+  name: string;
+  value: string;
+  price: number;
 }
 
 export default {
   components: {
     SearchHeader,
     CustomCheckbox,
-    CardItem,
+    // CardItem,
     PlusOutlined,
     MinusOutlined,
   },
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const listTabs = reactive<Tab[]>([
       { id: 1, title: "Today's special", isActive: true },
       { id: 2, title: "Customer Favorite", isActive: false },
       { id: 3, title: "Discounts", isActive: false },
     ]);
+    let item = ref<DocumentData>();
+    const similarItems = ref<DocumentData[]>([]);
+
     const bottle = reactive<Item>({
+      volume: 0,
+      price: 0,
       check: false,
-      price: 1000,
       quantity: 0,
     });
     const glass = reactive<Item>({
+      volume: 0,
+      price: 0,
       check: false,
-      price: 300,
       quantity: 0,
+    });
+
+    // async function getProductData() {
+    //   const id = route.params.id;
+    //   try {
+    //     const data = await getProductById(id as string);
+    //     item.value = data.product.value;
+    //     console.log(item.value);
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
+    // }
+
+    // getProductData();
+
+    watch(item, () => {
+      console.log(item.value);
     });
 
     const changeTab = (tab: Tab) => {
@@ -234,6 +276,7 @@ export default {
       listTabs,
       bottle,
       glass,
+      item,
       changeTab,
       navigateHome,
       changeBottle,

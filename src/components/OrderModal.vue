@@ -10,11 +10,8 @@
             <img src="../assets/image/item-card-image.png" alt="item-image" />
           </div>
           <div class="infor">
-            <h2>60 Sessantanni Limited Edition Italia champagne</h2>
-            <p>
-              Full of the fragrant aroma of fruits mixed with plum and cherry
-              jam. The wine has a full-bodied, balanced flavor...
-            </p>
+            <h2>{{ item.name }}</h2>
+            <p>{{ item.description }}</p>
           </div>
         </div>
         <div class="select-container">
@@ -26,7 +23,7 @@
             <div class="select-quantity">
               <div class="type flex-row-start">
                 <img src="../assets/icon/bottle-black.png" alt="bottle" />
-                <span>750 ml bottle</span>
+                <span> {{ bottle.value }} ml bottle</span>
               </div>
               <p class="price">${{ bottle.price }}</p>
               <div class="btn-change">
@@ -64,7 +61,7 @@
             <div class="select-quantity">
               <div class="type flex-row-start">
                 <img src="../assets/icon/glass-black.png" alt="glass" />
-                <span>150 ml glass</span>
+                <span>{{ glass.value }} ml glass</span>
               </div>
               <p class="price">${{ glass.price }}</p>
               <div class="btn-change">
@@ -137,7 +134,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent, ref, reactive, PropType, computed } from "vue";
 import {
   CloseOutlined,
   PlusOutlined,
@@ -146,17 +143,29 @@ import {
   GiftOutlined,
 } from "@ant-design/icons-vue";
 import CustomCheckbox from "./CustomCheckbox.vue";
+import { getAttributeById } from "../composables/useCollection";
+import { DocumentData } from "firebase/firestore";
 
-interface Item {
+interface Item extends Attribute {
   check: boolean;
-  price: number;
   quantity: number;
+}
+
+interface Attribute {
+  id: string;
+  name: string;
+  value: number;
+  price: number;
 }
 
 export default defineComponent({
   props: {
     show: {
       type: Boolean,
+      required: true,
+    },
+    data: {
+      type: Object,
       required: true,
     },
   },
@@ -169,24 +178,55 @@ export default defineComponent({
     CustomCheckbox,
   },
   setup(props, { emit }) {
-    const bottle = reactive<Item>({
+    const bottle = ref<Item>({
+      id: "",
+      name: "",
+      value: 0,
+      price: 0,
       check: false,
-      price: 1000,
       quantity: 0,
     });
-    const glass = reactive<Item>({
+    const glass = ref<Item>({
+      id: "",
+      name: "",
+      value: 0,
+      price: 0,
       check: false,
-      price: 300,
       quantity: 0,
     });
+    function getAttributeData() {
+      props.data.attributes.map(async (attribute: any) => {
+        console.log("attri", attribute.id);
+        const data = await getAttributeById(attribute.id as string);
+        attribute.name = data;
+      });
+      const bottleData: Attribute = props.data.attributes.find(
+        (attribute: any) => attribute.name === "bottle"
+      );
+
+      bottle.value = {
+        ...bottleData,
+        check: false,
+        quantity: 0,
+      };
+      const glassData = props.data.attributes.find(
+        (attribute: any) => attribute.name === "glass"
+      );
+      glass.value = {
+        ...glassData,
+        check: false,
+        quantity: 0,
+      };
+    }
+    getAttributeData();
+
     const notes = ref<string>("");
     const promoCode = ref<string>("");
-
     const changeBottle = (number: number) => {
-      bottle.quantity += number;
+      bottle.value.quantity += number;
     };
     const changeGlass = (number: number) => {
-      glass.quantity += number;
+      glass.value.quantity += number;
     };
     const close = () => {
       emit("closeModal");
@@ -202,6 +242,7 @@ export default defineComponent({
     return {
       bottle,
       glass,
+      item: props.data,
       notes,
       promoCode,
       changeBottle,

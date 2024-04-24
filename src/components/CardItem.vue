@@ -1,35 +1,31 @@
 <template>
-  <div class="card-container">
+  <div class="card-container" v-if="item">
     <div class="img-container" @click="navigateDeatilView">
       <img src="../assets/image/item-card-image.png" alt="item-image" />
     </div>
     <div class="content" @click="navigateDeatilView">
-      <h4>60 Sessantanni Limited Edition Italia champagne</h4>
+      <h4>{{ item.name }}</h4>
       <div class="detail">
         <div class="first-row">
-          <div>
-            <img src="../assets/icon/Glass.png" alt="glass" />
-            150ml glass
-          </div>
-          <div>
-            <img src="../assets/icon/Bottle.png" alt="bottle" />
-            500ml bottle
-          </div>
-        </div>
-        <div class="second-row">
-          <div>
-            <img src="../assets/icon/Bottle.png" alt="bottle" />
-            500ml bottle
+          <div v-for="attribute in item.attributes" :key="attribute.id">
+            <!-- <img
+              :src="'../assets/icon/' + attribute.name + '.png'"
+              alt="imae"
+            /> -->
+            {{ attribute.value }}ml {{ attribute.name }}
           </div>
         </div>
       </div>
     </div>
     <div class="btn-container">
       <a-button @click="showOdering = true">
-        $300 - $1000
+        ${{ minVolumePrice(item.attributes) }} - ${{
+          maxVolumePrice(item.attributes)
+        }}
         <img src="../assets/icon/Union.png" alt="plus" />
       </a-button>
       <order-modal
+        :data="item"
         :show="showOdering"
         @closeModal="showOdering = false"
         @order="shwoPurchase = true"
@@ -40,31 +36,48 @@
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import OrderModal from "./OrderModal.vue";
 import SuccessModal from "./SuccessModal.vue";
+import { DocumentData } from "firebase/firestore";
 
-export default {
+export default defineComponent({
   components: {
     OrderModal,
     SuccessModal,
   },
-  setup() {
+  props: {
+    data: {
+      type: Object as () => DocumentData,
+      required: true,
+    },
+  },
+  setup(props) {
     const router = useRouter();
     const showOdering = ref<boolean>(false);
     const shwoPurchase = ref<boolean>(false);
+    const item = ref(props.data);
 
+    const minVolumePrice = (attributes: any) => {
+      return Math.min(...attributes.map((attribute: any) => attribute.price));
+    };
+    const maxVolumePrice = (attributes: any) => {
+      return Math.max(...attributes.map((attribute: any) => attribute.price));
+    };
     const navigateDeatilView = () => {
-      router.push("/detail-infor/1");
+      router.push("/detail-infor/" + props.data.id);
     };
     return {
       showOdering,
       shwoPurchase,
+      item,
+      minVolumePrice,
+      maxVolumePrice,
       navigateDeatilView,
     };
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
@@ -95,6 +108,7 @@ export default {
   gap: 12px;
   padding: 0;
   h4 {
+    min-height: 48px;
     font-family: Newsreader;
     font-size: 16px;
     font-weight: 500;
@@ -144,6 +158,7 @@ export default {
       #efdcac 49.93%,
       #dcc29e 98.97%
     );
+    border-radius: 0;
     border: none;
     font-family: Newsreader;
     font-size: 16px;
