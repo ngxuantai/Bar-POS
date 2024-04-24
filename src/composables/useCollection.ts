@@ -30,7 +30,9 @@ async function getAllProducts(id_sub_category: string) {
         where("id_product", "==", productDoc.ref)
       );
 
-      const productAttributeQuerySnapshot = await getDocs(productAttributeQuery);
+      const productAttributeQuerySnapshot = await getDocs(
+        productAttributeQuery
+      );
       for (const productAttributeDoc of productAttributeQuerySnapshot.docs) {
         const productAttributeData = productAttributeDoc.data();
         const attributeDoc = await getDoc(productAttributeData.id_attribute);
