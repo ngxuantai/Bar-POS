@@ -25,12 +25,18 @@ interface ProductWithQuantity extends Product {
   attributes: AttributeWithQuantity[];
 }
 
-interface Order {
-  listProducts: ProductWithQuantity[];
+interface OrderDetail {
+  infor_product: ProductWithQuantity;
   notes: string;
+  discount: number;
+  total_quantity: number;
+  total_price_product: number;
+}
+
+interface OrderInfor {
   discount: number;
   total_quantity: number;
   total_price: number;
 }
 
-export type { Product, ProductWithAttributes, Attribute, AttributeWithQuantity, ProductWithQuantity, Order };
+export type { Product, ProductWithAttributes, Attribute, AttributeWithQuantity, ProductWithQuantity, OrderDetail, OrderInfor };

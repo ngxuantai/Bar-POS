@@ -7,7 +7,7 @@
       <div class="content">
         <div class="infor-container">
           <div class="img-container">
-            <img src="../assets/image/item-card-image.png" alt="item-image" />
+            <img src="../assets/image/img.png" alt="item-image" />
           </div>
           <div class="infor">
             <h2>{{ item.name }}</h2>
@@ -143,8 +143,10 @@ import {
   GiftOutlined,
 } from "@ant-design/icons-vue";
 import CustomCheckbox from "./CustomCheckbox.vue";
+// import { IMG_URL } from "../../constants";
 import { getAttributeById } from "../composables/useCollection";
-import { DocumentData } from "firebase/firestore";
+import { useStore } from "vuex";
+import { ProductWithAttributes } from "types";
 
 interface Item extends Attribute {
   check: boolean;
@@ -178,6 +180,7 @@ export default defineComponent({
     CustomCheckbox,
   },
   setup(props, { emit }) {
+    const store = useStore();
     const bottle = ref<Item>({
       id: "",
       name: "",
@@ -232,14 +235,49 @@ export default defineComponent({
       emit("closeModal");
     };
     const addCart = () => {
-      emit("addCart");
-      emit("closeModal");
+      // emit("addCart");
+      // emit("closeModal");
+      if (bottle.value.quantity > 0 || glass.value.quantity > 0) {
+        const product = {
+          infor_product: {
+            id: props.data.id,
+            name: props.data.name,
+            description: props.data.description,
+            about: props.data.about,
+            id_category: props.data.id_category,
+            attributes: [
+              {
+                id: bottle.value.id,
+                name: bottle.value.name,
+                value: bottle.value.value,
+                price: bottle.value.price,
+                quantity: bottle.value.quantity,
+              },
+              {
+                id: glass.value.id,
+                name: glass.value.name,
+                value: glass.value.value,
+                price: glass.value.price,
+                quantity: glass.value.quantity,
+              },
+            ],
+          },
+          notes: notes.value,
+          discount: 0,
+          total_quantity: bottle.value.quantity + glass.value.quantity,
+          total_price:
+            bottle.value.price * bottle.value.quantity +
+            glass.value.price * glass.value.quantity,
+        };
+        store.dispatch("addCart", product);
+      }
     };
     const order = () => {
       emit("order");
       emit("closeModal");
     };
     return {
+      // IMG_URL,
       bottle,
       glass,
       item: props.data,

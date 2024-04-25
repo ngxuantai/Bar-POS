@@ -19,7 +19,10 @@ async function getAllProducts(id_sub_category: string) {
     const productQuerySnapshot = await getDocs(productQuery);
 
     for (const productDoc of productQuerySnapshot.docs) {
-      const productData = productDoc.data() as Product;
+      const productData = {
+        id: productDoc.id,
+        ...productDoc.data(),
+      } as Product;
       const productWithAttributes: ProductWithAttributes = {
         ...productData,
         attributes: [],
