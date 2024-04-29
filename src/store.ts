@@ -39,7 +39,6 @@ const store = createStore({
   },
   actions: {
     addCart({ commit }, orderPayload) {
-      console.log("productPayload", orderPayload);
       commit("addOrder", orderPayload);
     },
   },

@@ -7,7 +7,7 @@
       <div class="content">
         <div class="infor-container">
           <div class="img-container">
-            <img src="../assets/image/img.png" alt="item-image" />
+            <img src="../../assets/image/img.png" alt="item-image" />
           </div>
           <div class="infor">
             <h2>{{ item.name }}</h2>
@@ -22,7 +22,7 @@
             />
             <div class="select-quantity">
               <div class="type flex-row-start">
-                <img src="../assets/icon/bottle-black.png" alt="bottle" />
+                <img src="../../assets/icon/bottle-black.png" alt="bottle" />
                 <span> {{ bottle.value }} ml bottle</span>
               </div>
               <p class="price">${{ bottle.price }}</p>
@@ -60,7 +60,7 @@
             />
             <div class="select-quantity">
               <div class="type flex-row-start">
-                <img src="../assets/icon/glass-black.png" alt="glass" />
+                <img src="../../assets/icon/glass-black.png" alt="glass" />
                 <span>{{ glass.value }} ml glass</span>
               </div>
               <p class="price">${{ glass.price }}</p>
@@ -142,9 +142,9 @@ import {
   EditOutlined,
   GiftOutlined,
 } from "@ant-design/icons-vue";
-import CustomCheckbox from "./CustomCheckbox.vue";
-// import { IMG_URL } from "../../constants";
-import { getAttributeById } from "../composables/useCollection";
+import CustomCheckbox from "../CustomCheckbox/index.vue";
+import { IMG_URL } from "../../constants";
+import { getAttributeById } from "../../composables/useCollection";
 import { useStore } from "vuex";
 import { ProductWithAttributes } from "types";
 
@@ -199,7 +199,6 @@ export default defineComponent({
     });
     function getAttributeData() {
       props.data.attributes.map(async (attribute: any) => {
-        console.log("attri", attribute.id);
         const data = await getAttributeById(attribute.id as string);
         attribute.name = data;
       });
@@ -277,7 +276,7 @@ export default defineComponent({
       emit("closeModal");
     };
     return {
-      // IMG_URL,
+      IMG_URL,
       bottle,
       glass,
       item: props.data,
@@ -294,270 +293,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.modal {
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
-  width: 610px;
-  padding: 28px;
-  background-color: #f8f8f8;
-  border-radius: 6px;
-}
-
-.title {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 7px;
-}
-
-.content {
-  margin: 0px 18px 11px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.infor-container {
-  display: flex;
-  gap: 12px;
-  .img-container {
-    width: 79px;
-    height: 98px;
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-  .infor {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 12px;
-    letter-spacing: -0.4000000059604645px;
-    h2,
-    p {
-      font-family: Newsreader;
-      margin: 0;
-      text-align: left;
-    }
-    h2 {
-      font-size: 20px;
-      font-weight: 500;
-      line-height: 28px;
-      color: #051a38;
-    }
-    p {
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 22px;
-      color: #595959;
-    }
-  }
-}
-
-.select-container {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  background: #f5f5f5;
-}
-
-.flex-row-start {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.flex-row-between {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.select-quantity {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-}
-
-.type {
-  margin-left: 26px;
-  width: 170px;
-  span {
-    font-family: Newsreader;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 26px;
-    text-align: left;
-    color: #595959;
-  }
-}
-
-.price,
-.real-price {
-  width: 70px;
-  margin: 0;
-  font-family: Newsreader;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 26px;
-  text-align: left;
-}
-.price {
-  color: #595959;
-}
-.real-price {
-  color: #262626;
-}
-
-.btn-change {
-  display: flex;
-  align-items: center;
-  button {
-    width: 26px;
-    height: 26px;
-    border-radius: 2px;
-    padding: 0;
-  }
-  > span {
-    width: 37px;
-    height: 36px;
-    padding: 12px 14px;
-    font-family: Newsreader;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 28px;
-    align-content: center;
-    color: #5b5b5b;
-  }
-}
-
-.btn-disable {
-  border: 1px solid #d9d9d9;
-  color: #d9d9d9;
-  &:hover,
-  &:active {
-    border: 1px solid #d9d9d9;
-    color: #d9d9d9;
-  }
-}
-.btn-active {
-  border: 1px solid #8c8c8c;
-  color: #8c8c8c;
-  &:hover,
-  &:active {
-    border: 1px solid #8c8c8c;
-    color: #8c8c8c;
-  }
-}
-
-.notes {
-  display: flex;
-  justify-content: space-between;
-  gap: 24px;
-  div {
-    width: 274px;
-    height: 40px;
-    padding: 0 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid #f0f0f0;
-    input {
-      padding: 0;
-      font-family: Newsreader;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 22px;
-      text-align: left;
-      color: #bfbfbf;
-    }
-  }
-}
-
-.total-container {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.discount,
-.total {
-  height: 29px;
-  span {
-    font-family: Newsreader;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 26px;
-    text-align: left;
-    color: #484848;
-  }
-}
-
-.discount h4 {
-  margin: 0;
-  font-family: Newsreader;
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 28px;
-  text-align: right;
-  color: #3a3a3a;
-}
-.total h3 {
-  margin: 0;
-  font-family: Newsreader;
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 32px;
-  text-align: right;
-  color: #051a38;
-}
-
-.cart {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  button {
-    width: 247px;
-    height: 52px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: Newsreader;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 28px;
-  }
-  .add-cart {
-    border: 1px solid #051a38;
-    background: transparent;
-    &:hover {
-      color: #000000;
-    }
-  }
-  .order {
-    border: none;
-    background: #051a38;
-    color: #ffffff;
-    &:hover {
-      color: #ffffff;
-    }
-  }
-}
+@import "./style.scss";
 </style>

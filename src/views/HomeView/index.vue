@@ -7,8 +7,8 @@
 
 <script lang="ts">
 import { ref, reactive } from "vue";
-import SearchHeader from "@/components/SearchHeader.vue";
-import ListCardItem from "@/components/ListCardItem.vue";
+import SearchHeader from "../../components/SearchHeader/index.vue";
+import ListCardItem from "../../components/ListCardItem/index.vue";
 
 interface Tab {
   id: number;
@@ -40,6 +40,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 @import "./style.scss";
-</style>
+</style> -->

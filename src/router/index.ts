@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import OnboardView from "../views/OnboardView/index.vue";
 import HomeView from "../views/HomeView/index.vue";
-import Layout from "@/views/layout.vue";
+import Layout from "../views/Layout/index.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {

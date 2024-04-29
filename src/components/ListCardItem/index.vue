@@ -24,13 +24,12 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted, onBeforeUnmount } from "vue";
+// import { useRouter } from "vue-router";
 import { DownOutlined } from "@ant-design/icons-vue";
-import CardItem from "./CardItem.vue";
-import { getAllProducts } from "../composables/useCollection";
+import CardItem from "../CardItem/index.vue";
+import { getAllProducts } from "../../composables/useCollection";
 import { DocumentData } from "firebase/firestore";
-import { ProductWithAttributes } from "types";
 interface Option {
   value: string;
   text: string;
@@ -42,7 +41,7 @@ export default {
     CardItem,
   },
   setup() {
-    const router = useRouter();
+    // const router = useRouter();
     const itemsContainerRef = ref<HTMLElement | null>(null);
     const colCount = ref<number>(4);
     const show = ref<boolean>(false);
@@ -108,75 +107,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.items-container {
-  width: 100%;
-  min-width: 516px;
-  padding: 4px 70px 0 70px;
-  display: flex;
-  flex-direction: column;
-  .sort {
-    display: flex;
-    height: 50px;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 16px;
-    h3 {
-      color: #ffffff;
-      font-family: Newsreader;
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 26px;
-      text-align: center;
-      margin: 0;
-    }
-  }
-}
-
-.custom-select {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  width: 146px;
-  height: 100%;
-  background: #262626;
-  text-transform: none;
-  border: none;
-  outline: none;
-  color: #fff;
-  align-content: center;
-  position: relative;
-  font-family: Newsreader;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 26px;
-  text-align: center;
-}
-
-.list-option {
-  position: absolute;
-  top: 62px;
-  right: 0;
-  z-index: 4;
-  background: #181818;
-  width: 251px;
-  border-radius: 6px;
-  .option {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 16px 24px;
-    color: #fff;
-    height: 54px;
-    border-radius: 6px;
-    &:hover {
-      background: #434343;
-    }
-  }
-}
-.list-items {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 50px 48px;
-}
+@import "./style.scss";
 </style>

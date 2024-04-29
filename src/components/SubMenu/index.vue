@@ -43,7 +43,7 @@
 <script lang="ts">
 import { ref } from "vue";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
-import CustomCheckbox from "./CustomCheckbox.vue";
+import CustomCheckbox from "../CustomCheckbox/index.vue";
 
 interface Item {
   key: string;
@@ -95,7 +95,7 @@ export default {
             }
           });
         } else {
-          item.children.forEach((child, j) => {
+          item.children.forEach((child) => {
             child.check = false;
           });
         }
@@ -111,77 +111,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.menu {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  background-color: #000;
-}
-
-.menu-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.menu-item {
-  padding: 0 24px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.menu-title {
-  width: 100%;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-decoration: none;
-  background: #000;
-  h3 {
-    font-family: Newsreader;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 28px;
-    text-align: left;
-    margin: 0;
-  }
-}
-
-.submenu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  li {
-    height: 54px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    p {
-      color: #fff;
-      text-decoration: none;
-      font-family: Newsreader;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 22px;
-      text-align: left;
-      margin: 0;
-      margin-left: 14px;
-    }
-  }
-}
-
-.color-text-white {
-  color: #fff;
-}
-.color-text-linear {
-  background: linear-gradient(
-    268.43deg,
-    #fdeec3 3.58%,
-    #efdcac 49.93%,
-    #dcc29e 98.97%
-  );
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+@import "./style.scss";
 </style>

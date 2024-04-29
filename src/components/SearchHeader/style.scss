@@ -1,57 +1,5 @@
-<template>
-  <a-layout-header class="header-container">
-    <div class="search">
-      <search-outlined />
-      <input placeholder="Search for wine" />
-    </div>
-    <div class="tabs">
-      <div
-        v-for="tab in listItems"
-        :key="tab.id"
-        class="item-tab"
-        :class="{ selected: tab.isActive }"
-        @click="selectTab(tab)"
-      >
-        <p>{{ tab.title }}</p>
-      </div>
-    </div>
-  </a-layout-header>
-</template>
-
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
-import { SearchOutlined } from "@ant-design/icons-vue";
-
-interface Tab {
-  id: number;
-  title: string;
-  isActive: boolean;
-}
-
-export default defineComponent({
-  components: {
-    SearchOutlined,
-  },
-  props: {
-    listTabs: {
-      type: Array as PropType<Tab[]>,
-      required: true,
-    },
-  },
-  setup(props, { emit }) {
-    const selectTab = (tab: Tab) => {
-      emit("selectTab", tab);
-    };
-    return {
-      listItems: props.listTabs,
-      selectTab,
-    };
-  },
-});
-</script>
-
-<style lang="scss" scoped>
-$font-family: "Newsreader";
+@import '../../assets/scss/_variables.scss';
+@import '../../assets/scss/_mixins.scss';
 $text-color: #bfbfbf;
 $selected-tab-gradient: linear-gradient(
   268.43deg,
@@ -61,18 +9,15 @@ $selected-tab-gradient: linear-gradient(
 );
 
 .header-container {
+  @include flex(row, space-between, center);
   height: 124px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   padding: 37px 64px;
   background: #000;
 }
 .search {
+  @include flex(row, null, center);
   height: 50px;
   padding: 15px 20px;
-  display: flex;
-  align-items: center;
   gap: 12px;
   background: #181818;
   span {
@@ -98,9 +43,8 @@ $selected-tab-gradient: linear-gradient(
   }
 }
 .tabs {
+  @include flex(row, null, center);
   height: 100%;
-  display: flex;
-  align-items: center;
   gap: 24px;
   .item-tab {
     height: 100%;
@@ -161,4 +105,3 @@ $selected-tab-gradient: linear-gradient(
     }
   }
 }
-</style>

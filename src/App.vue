@@ -6,9 +6,9 @@
 export default {};
 </script>
 
-<style>
+<style lang="scss">
 #app {
-  font-family: Merriweather;
+  font-family: Newsreader;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

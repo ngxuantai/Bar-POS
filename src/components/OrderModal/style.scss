@@ -1,0 +1,248 @@
+@import '../../assets/scss/_variables.scss';
+@import '../../assets/scss/_mixins.scss';
+
+.modal {
+  @include flex(row, center, center);
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  width: 610px;
+  padding: 28px;
+  background-color: #f8f8f8;
+  border-radius: 6px;
+}
+
+.title {
+  @include flex(row, flex-end, null);
+  width: 100%;
+  margin-bottom: 7px;
+}
+
+.content {
+  @include flex(column, null, null);
+  margin: 0px 18px 11px 18px;
+  gap: 24px;
+}
+
+.infor-container {
+  display: flex;
+  gap: 12px;
+  .img-container {
+    width: 79px;
+    height: 98px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .infor {
+    @include flex(column, flex-start, flex-start);
+    gap: 12px;
+    letter-spacing: -0.4000000059604645px;
+    h2,
+    p {
+      font-family: $font-family;
+      margin: 0;
+      text-align: left;
+    }
+    h2 {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 28px;
+      color: #051a38;
+    }
+    p {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      color: #595959;
+    }
+  }
+}
+
+.select-container {
+  @include flex(column, null, null);
+  gap: 14px;
+  background: #f5f5f5;
+}
+
+.flex-row-start {
+  @include flex(row, flex-start, center);
+}
+
+.flex-row-between {
+  @include flex(row, space-between, center);
+}
+
+.select-quantity {
+  @include flex(row, null, center);
+  gap: 20px;
+}
+
+.type {
+  margin-left: 26px;
+  width: 170px;
+  span {
+    font-family: $font-family;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    text-align: left;
+    color: #595959;
+  }
+}
+
+.price,
+.real-price {
+  width: 70px;
+  margin: 0;
+  font-family: $font-family;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+  text-align: left;
+}
+.price {
+  color: #595959;
+}
+.real-price {
+  color: #262626;
+}
+
+.btn-change {
+  @include flex(row, null, center);
+  button {
+    width: 26px;
+    height: 26px;
+    border-radius: 2px;
+    padding: 0;
+  }
+  > span {
+    width: 37px;
+    height: 36px;
+    padding: 12px 14px;
+    font-family: $font-family;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    align-content: center;
+    color: #5b5b5b;
+  }
+}
+
+.btn-disable {
+  border: 1px solid #d9d9d9;
+  color: #d9d9d9;
+  &:hover,
+  &:active {
+    border: 1px solid #d9d9d9;
+    color: #d9d9d9;
+  }
+}
+.btn-active {
+  border: 1px solid #8c8c8c;
+  color: #8c8c8c;
+  &:hover,
+  &:active {
+    border: 1px solid #8c8c8c;
+    color: #8c8c8c;
+  }
+}
+
+.notes {
+  @include flex(row, space-between, null);
+  gap: 24px;
+  div {
+    @include flex(row, null, center);
+    width: 274px;
+    height: 40px;
+    padding: 0 8px;
+    gap: 8px;
+    border-bottom: 1px solid #f0f0f0;
+    input {
+      padding: 0;
+      font-family: $font-family;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 22px;
+      text-align: left;
+      color: #bfbfbf;
+    }
+  }
+}
+
+.total-container {
+  @include flex(column, null, null);
+  gap: 12px;
+}
+
+.discount,
+.total {
+  height: 29px;
+  span {
+    font-family: $font-family;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    text-align: left;
+    color: #484848;
+  }
+  h3, h4 {
+    margin: 0;
+    font-family: $font-family;
+    font-weight: 400;
+    text-align: right;
+  }
+}
+
+.discount h4 {
+  font-size: 20px;
+  line-height: 28px;
+  color: #3a3a3a;
+}
+.total h3 {
+  font-size: 24px;
+  line-height: 32px;
+  color: #051a38;
+}
+
+.cart {
+  width: 100%;
+  @include flex(row, center, null);
+  gap: 24px;
+  button {
+    @include flex(row, center, center);
+    width: 247px;
+    height: 52px;
+    border-radius: 4px;
+    font-family: $font-family;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
+    border-radius: 0;
+  }
+  .add-cart {
+    border: 1px solid #051a38;
+    background: transparent;
+    &:hover {
+      color: #000000;
+    }
+  }
+  .order {
+    border: none;
+    background: #051a38;
+    color: #ffffff;
+    &:hover {
+      color: #ffffff;
+    }
+  }
+}

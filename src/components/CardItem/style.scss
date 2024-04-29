@@ -1,0 +1,91 @@
+@import '../../assets/scss/_variables.scss';
+@import '../../assets/scss/_mixins.scss';
+
+.card-container {
+  width: 100%;
+  min-height: 397px;
+  @include flex(column, null, center);
+  gap: 12px;
+  .img-container {
+    width: 159px;
+    height: 220px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+.content {
+  width: 100%;
+  @include flex(column, center, center);
+  gap: 12px;
+  padding: 0;
+  h4 {
+    min-height: 48px;
+    font-family: $font-family;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: center;
+    color: #fff;
+    margin: 0;
+  }
+}
+
+.detail {
+  min-height: 46px;
+  @include flex(column, null, null);
+  gap: 6px;
+  .first-row {
+    @include flex(row, flex-start, center);
+    div:nth-child(1) {
+      border-right: 1px solid #fff;
+      padding-left: 0;
+    }
+  }
+  .first-row div,
+  .second-row div {
+    font-family: Inter;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    padding: 0 12px;
+  }
+}
+
+.btn-container {
+  width: 100%;
+  button {
+    width: 100%;
+    height: 47px;
+    padding: 0 20px;
+    @include flex(row, space-between, center);
+    background: linear-gradient(
+      268.43deg,
+      #fdeec3 3.58%,
+      #efdcac 49.93%,
+      #dcc29e 98.97%
+    );
+    border-radius: 0;
+    border: none;
+    font-family: $font-family;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+    text-align: left;
+    color: #051a38;
+    &:hover,
+    &:focus-visible {
+      outline: none;
+      color: #051a38;
+    }
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .content {
+    padding: 0 12px;
+  }
+}

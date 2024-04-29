@@ -51,7 +51,6 @@ async function getAllProducts(id_sub_category: string) {
       products.value.push(productWithAttributes);
     }
 
-    console.log("products", products.value);
     return { products };
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -59,44 +58,38 @@ async function getAllProducts(id_sub_category: string) {
   }
 }
 
-// async function getProductById(id: string) {
-//   try {
-//     const docRef = doc(projectFirestore, "products", id);
-//     const docSnap: DocumentData = await getDoc(docRef);
+async function getProductById(id: string) {
+  const product = ref<ProductWithAttributes>({} as ProductWithAttributes);
+  try {
+    const docRef = doc(projectFirestore, "products", id);
+    const docSnap: DocumentData = await getDoc(docRef);
+    product.value = {
+      ...docSnap.data(),
+      attributes: [],
+    };
 
-//     const productData: Product = {
-//       ...(docSnap.data() as Product), // casting to Product type
-//     };
-//     console.log("productData", productData);
-
-//     const product: ProductWithAttributes = {
-//       ...productData,
-//       attributes: [],
-//     };
-
-//     const productAttributeQuery = query(
-//       collection(projectFirestore, "product_attributes"),
-//       where("id_product", "==", id) // using id directly
-//     );
-//     const productAttributeQuerySnapshot = await getDocs(productAttributeQuery);
-//     productAttributeQuerySnapshot.forEach((productAttributeDoc) => {
-//       const productAttributeData = productAttributeDoc.data();
-//       const attribute: Attribute = {
-//         id: productAttributeDoc.id,
-//         name: productAttributeData.name,
-//         value: productAttributeData.value,
-//         price: productAttributeData.price,
-//       };
-//       product.attributes.push(attribute);
-//     });
-
-//     console.log("product", product);
-//     return { product };
-//   } catch (error) {
-//     console.error("Error fetching products:", error);
-//     throw error;
-//   }
-// }
+    const productAttributeQuery = query(
+      collection(projectFirestore, "product_attributes"),
+      where("id_product", "==", docRef)
+    );
+    const productAttributeQuerySnapshot = await getDocs(productAttributeQuery);
+    for (const productAttributeDoc of productAttributeQuerySnapshot.docs) {
+      const productAttributeData = productAttributeDoc.data();
+      const attributeDoc = await getDoc(productAttributeData.id_attribute);
+      const attribute: Attribute = {
+        id: attributeDoc.id,
+        name: (attributeDoc.data() as Attribute).name,
+        value: productAttributeData.value,
+        price: productAttributeData.price,
+      };
+      product.value.attributes.push(attribute);
+    }
+    return { product };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
+}
 
 async function getAttributeById(id: string) {
   try {
@@ -123,18 +116,21 @@ async function getProductsBySubCategory(id_sub_category: string) {
   );
   try {
     const querySnapshot = await getDocs(q);
-    console.log("querySnapshot", querySnapshot);
     querySnapshot.forEach((doc: DocumentData) => {
-      console.log("doc", doc.id);
       products.value.push({
         id: doc.id,
         ...doc.data(),
       });
     });
   } catch (error) {
-    console.log("Error getting documents: ", error);
+    console.error("Error getting documents: ", error);
   }
   return { products };
 }
 
-export { getAllProducts, getAttributeById, getProductsBySubCategory };
+export {
+  getAllProducts,
+  getAttributeById,
+  getProductById,
+  getProductsBySubCategory,
+};

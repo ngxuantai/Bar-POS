@@ -1,7 +1,7 @@
 <template>
   <div class="sider-category">
     <div class="logo">
-      <img src="../assets/image/logo.png" alt="logo" @click="navigateHome" />
+      <img src="../../assets/image/logo.png" alt="logo" @click="navigateHome" />
     </div>
     <sub-menu :items="items" />
   </div>
@@ -10,7 +10,7 @@
 <script lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import SubMenu from "./SubMenu.vue";
+import SubMenu from "../SubMenu/index.vue";
 
 interface Item {
   key: string;
@@ -100,19 +100,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.sider-category {
-  padding: 24px 16px 0 16px;
-}
-
-.logo {
-  width: 100%;
-  height: 82px;
-  padding: 7px 122px 7px 24px;
-  margin-bottom: 36px;
-  img {
-    width: 81px;
-    height: auto;
-    object-fit: cover;
-  }
-}
+@import "./style.scss";
 </style>
