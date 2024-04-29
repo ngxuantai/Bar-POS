@@ -136,6 +136,7 @@ $text-color: #262626;
     padding: 0;
   }
   > span {
+    @include flex(row, center, center);
     width: 37px;
     height: 36px;
     padding: 12px 14px;
@@ -143,7 +144,6 @@ $text-color: #262626;
     font-size: 20px;
     font-weight: 400;
     line-height: 28px;
-    align-content: center;
     color: #5b5b5b;
   }
 }

@@ -53,6 +53,9 @@
               <p class="real-price">${{ bottle.price * bottle.quantity }}</p>
             </div>
           </div>
+          <div class="error">
+            <p>{{ errorBottle }}</p>
+          </div>
           <div class="flex-row-start" style="padding: 0 16px">
             <custom-checkbox
               :status="glass.check"
@@ -90,6 +93,9 @@
               </div>
               <p class="real-price">${{ glass.price * glass.quantity }}</p>
             </div>
+          </div>
+          <div class="error">
+            <p>{{ errorGlass }}</p>
           </div>
         </div>
         <div class="notes">
@@ -134,7 +140,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, PropType, computed } from "vue";
+import { defineComponent, ref } from "vue";
 import {
   CloseOutlined,
   PlusOutlined,
@@ -143,21 +149,14 @@ import {
   GiftOutlined,
 } from "@ant-design/icons-vue";
 import CustomCheckbox from "../CustomCheckbox/index.vue";
-import { IMG_URL } from "../../constants";
+// import { IMG_URL } from "../../constants";
 import { getAttributeById } from "../../composables/useCollection";
 import { useStore } from "vuex";
-import { ProductWithAttributes } from "types";
+import { Attribute } from "types";
 
 interface Item extends Attribute {
   check: boolean;
   quantity: number;
-}
-
-interface Attribute {
-  id: string;
-  name: string;
-  value: number;
-  price: number;
 }
 
 export default defineComponent({
@@ -186,17 +185,22 @@ export default defineComponent({
       name: "",
       value: 0,
       price: 0,
+      number_product: 0,
       check: false,
       quantity: 0,
     });
+    const errorBottle = ref<string>("");
     const glass = ref<Item>({
       id: "",
       name: "",
       value: 0,
       price: 0,
+      number_product: 0,
       check: false,
       quantity: 0,
     });
+    const errorGlass = ref<string>("");
+
     function getAttributeData() {
       props.data.attributes.map(async (attribute: any) => {
         const data = await getAttributeById(attribute.id as string);
@@ -226,9 +230,27 @@ export default defineComponent({
     const promoCode = ref<string>("");
     const changeBottle = (number: number) => {
       bottle.value.quantity += number;
+      if (bottle.value.quantity < 0) {
+        bottle.value.quantity = 0;
+      }
+      if (bottle.value.quantity > bottle.value.number_product) {
+        errorBottle.value =
+          "The quantity you selected has reached the maximum capacity for this product";
+      } else {
+        errorBottle.value = "";
+      }
     };
     const changeGlass = (number: number) => {
       glass.value.quantity += number;
+      if (glass.value.quantity < 0) {
+        glass.value.quantity = 0;
+      }
+      if (glass.value.quantity > glass.value.number_product) {
+        errorGlass.value =
+          "The quantity you selected has reached the maximum capacity for this product";
+      } else {
+        errorGlass.value = "";
+      }
     };
     const close = () => {
       emit("closeModal");
@@ -236,7 +258,12 @@ export default defineComponent({
     const addCart = () => {
       // emit("addCart");
       // emit("closeModal");
-      if (bottle.value.quantity > 0 || glass.value.quantity > 0) {
+      if (
+        (bottle.value.quantity > 0 || glass.value.quantity > 0) &&
+        errorBottle.value === "" &&
+        errorGlass.value === ""
+      ) {
+        console.log("add cart");
         const product = {
           infor_product: {
             id: props.data.id,
@@ -276,9 +303,11 @@ export default defineComponent({
       emit("closeModal");
     };
     return {
-      IMG_URL,
+      // IMG_URL,
       bottle,
+      errorBottle,
       glass,
+      errorGlass,
       item: props.data,
       notes,
       promoCode,

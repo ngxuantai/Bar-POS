@@ -15,6 +15,7 @@ interface Attribute {
   name: string;
   value: number;
   price: number;
+  number_product: number;
 }
 
 interface AttributeWithQuantity extends Attribute {

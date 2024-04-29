@@ -159,6 +159,7 @@ import {
   GiftOutlined,
 } from "@ant-design/icons-vue";
 import { AttributeWithQuantity, ProductWithQuantity, OrderDetail } from "types";
+import { loading, addOrder } from "../../composables/useCollection";
 
 export default {
   components: {
@@ -242,9 +243,17 @@ export default {
       show.value = !show.value;
       right.value = show.value ? "1146px" : "0";
     };
-    const shwoPurchaseModal = () => {
-      shwoPurchase.value = true;
-      toggleShowCheckout();
+    const shwoPurchaseModal = async () => {
+      try {
+        await addOrder();
+        console.log(loading.value);
+        store.dispatch("clearCart");
+        shwoPurchase.value = true;
+        toggleShowCheckout();
+        console.log(loading.value);
+      } catch (error) {
+        console.log(error);
+      }
     };
     return {
       show,

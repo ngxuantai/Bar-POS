@@ -36,10 +36,22 @@ const store = createStore({
       state.order_infor.total_quantity += orderPayload.total_quantity;
       state.order_infor.total_price += orderPayload.total_price;
     },
+    clearOrder(state) {
+      state.list_order_detail = [];
+      state.order_infor = {
+        discount: 0,
+        total_quantity: 0,
+        total_price: 0,
+      };
+      console.log("clearOrder");
+    },
   },
   actions: {
     addCart({ commit }, orderPayload) {
       commit("addOrder", orderPayload);
+    },
+    clearCart({ commit }) {
+      commit("clearOrder");
     },
   },
 });

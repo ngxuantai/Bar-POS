@@ -63,7 +63,7 @@
                 </button>
               </div>
               <p class="real-price">
-                ${{ item.priceBottle * bottle.quantity }}
+                <!-- ${{ item.priceBottle * bottle.quantity }} -->
               </p>
             </div>
           </div>
@@ -86,9 +86,9 @@
             >
               <div class="type flex-row-start">
                 <img src="../../assets/icon/glass-white.png" alt="glass" />
-                <span>{{ item.volGlass }} ml glass</span>
+                <!-- <span>{{ item.volGlass }} ml glass</span> -->
               </div>
-              <p class="price">${{ item.priceGlass }}</p>
+              <!-- <p class="price">${{ item.priceGlass }}</p> -->
               <div class="btn-change">
                 <button
                   @click="changeGlass(-1)"
@@ -113,7 +113,7 @@
                   <plus-outlined />
                 </button>
               </div>
-              <p class="real-price">${{ item.priceGlass * glass.quantity }}</p>
+              <!-- <p class="real-price">${{ item.priceGlass * glass.quantity }}</p> -->
             </div>
           </div>
         </div>
@@ -170,12 +170,16 @@
 <script lang="ts">
 import { reactive, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import SearchHeader from "../../components/SearchHeader.vue";
-import CustomCheckbox from "../../components/CustomCheckbox.vue";
+import SearchHeader from "../../components/SearchHeader/index.vue";
+import CustomCheckbox from "../../components/CustomCheckbox/index.vue";
 // import CardItem from "../../components/CardItem.vue";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
-import { getProductsBySubCategory } from "../../composables/useCollection";
+import {
+  getProductsBySubCategory,
+  getProductById,
+} from "../../composables/useCollection";
 import { DocumentData } from "firebase/firestore";
+import { ProductWithAttributes } from "../../../types";
 
 interface Tab {
   id: number;
@@ -188,25 +192,6 @@ interface Item {
   price: number;
   check: boolean;
   quantity: number;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  about: string;
-  id_category: string;
-}
-
-interface ProductWithAttributes extends Product {
-  attributes: Attribute[];
-}
-
-interface Attribute {
-  id: string;
-  name: string;
-  value: string;
-  price: number;
 }
 
 export default {
@@ -225,7 +210,6 @@ export default {
       { id: 2, title: "Customer Favorite", isActive: false },
       { id: 3, title: "Discounts", isActive: false },
     ]);
-    let item = ref<DocumentData>();
     const similarItems = ref<DocumentData[]>([]);
 
     const bottle = reactive<Item>({
@@ -241,22 +225,24 @@ export default {
       quantity: 0,
     });
 
-    // async function getProductData() {
-    //   const id = route.params.id;
-    //   try {
-    //     const data = await getProductById(id as string);
-    //     item.value = data.product.value;
-    //     console.log(item.value);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
+    async function getProductData() {
+      const item = ref<ProductWithAttributes>();
+      const id = route.params.id;
+      try {
+        const data = await getProductById(id as string);
+        console.log(data.product.value);
+        item.value = data.product.value;
+        console.log(item.value);
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-    // getProductData();
+    getProductData();
 
-    watch(item, () => {
-      console.log(item.value);
-    });
+    // watch(item, () => {
+    //   console.log(item.value);
+    // });
 
     const changeTab = (tab: Tab) => {
       listTabs.forEach((item) => {
@@ -276,7 +262,7 @@ export default {
       listTabs,
       bottle,
       glass,
-      item,
+      // item,
       changeTab,
       navigateHome,
       changeBottle,
