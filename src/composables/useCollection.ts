@@ -12,7 +12,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { Product, ProductWithAttributes, Attribute } from "../../types";
-import store from "@/store";
+import store from "../store";
 
 const loading = ref(false);
 

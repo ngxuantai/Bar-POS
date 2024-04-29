@@ -143,7 +143,12 @@
       </div>
     </div>
   </div>
-  <success-modal :show="shwoPurchase" @closeModal="shwoPurchase = false" />
+  <success-modal
+    :show="shwoPurchase"
+    @closeModal="shwoPurchase = false"
+    :listOrderDetailProp="listOrderDetail"
+    :orderInforProp="orderInfor"
+  />
 </template>
 
 <script lang="ts">
@@ -158,7 +163,11 @@ import {
   EditOutlined,
   GiftOutlined,
 } from "@ant-design/icons-vue";
-import { AttributeWithQuantity, ProductWithQuantity, OrderDetail } from "types";
+import {
+  AttributeWithQuantity,
+  ProductWithQuantity,
+  OrderDetail,
+} from "../../../types";
 import { loading, addOrder } from "../../composables/useCollection";
 
 export default {
@@ -247,9 +256,9 @@ export default {
       try {
         await addOrder();
         console.log(loading.value);
-        store.dispatch("clearCart");
         shwoPurchase.value = true;
         toggleShowCheckout();
+        store.dispatch("clearCart");
         console.log(loading.value);
       } catch (error) {
         console.log(error);

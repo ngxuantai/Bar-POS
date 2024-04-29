@@ -152,7 +152,7 @@ import CustomCheckbox from "../CustomCheckbox/index.vue";
 // import { IMG_URL } from "../../constants";
 import { getAttributeById } from "../../composables/useCollection";
 import { useStore } from "vuex";
-import { Attribute } from "types";
+import { Attribute } from "../../../types";
 
 interface Item extends Attribute {
   check: boolean;
@@ -240,6 +240,20 @@ export default defineComponent({
         errorBottle.value = "";
       }
     };
+    const resetData = () => {
+      bottle.value = {
+        ...bottle.value,
+        check: false,
+        quantity: 0,
+      };
+      glass.value = {
+        ...glass.value,
+        check: false,
+        quantity: 0,
+      };
+      notes.value = "";
+      promoCode.value = "";
+    };
     const changeGlass = (number: number) => {
       glass.value.quantity += number;
       if (glass.value.quantity < 0) {
@@ -297,6 +311,8 @@ export default defineComponent({
         };
         store.dispatch("addCart", product);
       }
+      resetData();
+      emit("closeModal");
     };
     const order = () => {
       emit("order");

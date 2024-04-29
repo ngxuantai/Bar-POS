@@ -16,6 +16,7 @@
           <div class="order">
             <div class="flex-row-between">
               <span class="title-name">Order ID</span>
+              <p class="title-name">123456</p>
             </div>
             <div class="flex-row-between">
               <span class="title-name">Time</span>
@@ -24,23 +25,29 @@
           </div>
           <div class="list-items">
             <span class="title-name">Products</span>
-            <div class="item">
-              <span class="title-name">
-                60 Sessantanni Limited Edition Italia champagne
-              </span>
+            <div
+              v-for="orderDetail in listOrderDetail"
+              :key="orderDetail.infor_product.name"
+              class="item"
+            >
+              <span class="title-name">{{
+                orderDetail.infor_product.name
+              }}</span>
               <div class="flex-row-between">
-                <h4>750ml bottle x2</h4>
-                <p>$1000</p>
+                <h4>{{ getTextAttribute(orderDetail.infor_product) }}</h4>
+                <p>
+                  ${{ getTotalPriceOrderDetail(orderDetail.infor_product) }}
+                </p>
               </div>
             </div>
           </div>
           <div class="flex-row-between total">
             <span class="title-name">Total</span>
-            <h3>$2000</h3>
+            <h3>{{ orderInfor.total_price }}</h3>
           </div>
         </div>
         <div class="new-order">
-          <a-button>New order</a-button>
+          <a-button @click="close">New order</a-button>
         </div>
       </div>
     </div>
@@ -48,13 +55,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 import { CloseOutlined } from "@ant-design/icons-vue";
+import {
+  OrderDetail,
+  OrderInfor,
+  ProductWithQuantity,
+  AttributeWithQuantity,
+} from "../../../types";
 
 export default defineComponent({
   props: {
     show: {
       type: Boolean,
+      required: true,
+    },
+    listOrderDetailProp: {
+      type: Array as () => OrderDetail[],
+      required: true,
+    },
+    orderInforProp: {
+      type: Object as () => OrderInfor,
       required: true,
     },
   },
@@ -65,8 +86,46 @@ export default defineComponent({
     const close = () => {
       emit("closeModal");
     };
+    const getBottleData = (product: ProductWithQuantity) => {
+      return product.attributes.find(
+        (attr: AttributeWithQuantity) => attr.name === "bottle"
+      ) as AttributeWithQuantity;
+    };
+    const getGlassData = (product: ProductWithQuantity) => {
+      return product.attributes.find(
+        (attr: AttributeWithQuantity) => attr.name === "glass"
+      ) as AttributeWithQuantity;
+    };
+    const getTextAttribute = (product: ProductWithQuantity) => {
+      let text = "";
+      const bottle = getBottleData(product);
+      const glass = getGlassData(product);
+      if (bottle.quantity > 0) {
+        text += `${bottle.value} ml ${bottle.name} x ${bottle.quantity}`;
+      }
+      if (glass.quantity > 0) {
+        text += `, ${glass.value} ml ${glass.name} x ${glass.quantity}`;
+      }
+      return text;
+    };
+    const getTotalPriceOrderDetail = (product: ProductWithQuantity) => {
+      let total = 0;
+      const bottle = getBottleData(product);
+      const glass = getGlassData(product);
+      if (bottle.quantity > 0) {
+        total += bottle.price * bottle.quantity;
+      }
+      if (glass.quantity > 0) {
+        total += glass.price * glass.quantity;
+      }
+      return total;
+    };
     return {
+      listOrderDetail: props.listOrderDetailProp,
+      orderInfor: props.orderInforProp,
       close,
+      getTextAttribute,
+      getTotalPriceOrderDetail,
     };
   },
 });
