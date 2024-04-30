@@ -1,3 +1,4 @@
+@import '../../assets/scss/_mixins.scss';
 $font-family: 'Newsreader';
 $primary-color: #051a38;
 $secondary-color: #8c8c8c;
@@ -29,7 +30,9 @@ $title-gradient: linear-gradient(268.43deg, #FDEEC3 3.58%, #EFDCAC 49.93%, #DCC2
 }
 
 .back {
-  @include flex-column-center-gap(13px);
+  display: flex;
+  align-items: center;
+  gap: 13px;
   p {
     margin: 0;
     font-weight: 400;
@@ -117,6 +120,13 @@ $title-gradient: linear-gradient(268.43deg, #FDEEC3 3.58%, #EFDCAC 49.93%, #DCC2
     display: flex;
     align-items: center;
   }
+  .error {
+    font-family: $font-family;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 26px;
+    color: #9c0101;
+  }
 }
 
 .select-quantity {
@@ -129,7 +139,7 @@ $title-gradient: linear-gradient(268.43deg, #FDEEC3 3.58%, #EFDCAC 49.93%, #DCC2
 .type {
   margin-left: 26px;
   width: 170px;
-  @include flex-column-center-gap(0);
+  @include flex(row, flex-start, center);
   span {
     font-family: $font-family;
     font-size: 16px;
@@ -177,15 +187,19 @@ $title-gradient: linear-gradient(268.43deg, #FDEEC3 3.58%, #EFDCAC 49.93%, #DCC2
     padding: 0;
     background: transparent;
   }
-  > span {
+  input {
     width: 37px;
-    height: 36px;
-    padding: 12px 14px;
+    height: 37px;
+    text-align: center;
+    background: transparent;
+    border: none;
     font-family: $font-family;
     font-size: 20px;
     font-weight: 400;
     line-height: 28px;
-    align-content: center;
+    &:focus-visible {
+      outline: none;
+    }
   }
 }
 

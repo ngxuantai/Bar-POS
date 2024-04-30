@@ -12,10 +12,11 @@ const store = createStore({
   },
   mutations: {
     addOrder(state, orderPayload) {
+      let orderAdded = false;
       if (state.list_order_detail.length === 0) {
         state.list_order_detail.push(orderPayload);
       } else {
-        state.list_order_detail.map((orderDetail) => {
+        state.list_order_detail.forEach((orderDetail) => {
           if (orderDetail.infor_product.id === orderPayload.infor_product.id) {
             orderPayload.infor_product.attributes.map(
               (attribute: AttributeWithQuantity) => {
@@ -28,13 +29,15 @@ const store = createStore({
             );
             orderDetail.total_quantity += orderPayload.total_quantity;
             orderDetail.total_price_product += orderPayload.total_price_product;
-          } else {
-            state.list_order_detail.push(orderPayload);
+            orderAdded = true;
           }
         });
+        if (!orderAdded) {
+          state.list_order_detail.push(orderPayload);
+        }
       }
       state.order_infor.total_quantity += orderPayload.total_quantity;
-      state.order_infor.total_price += orderPayload.total_price;
+      state.order_infor.total_price += orderPayload.total_price_product;
     },
     clearOrder(state) {
       state.list_order_detail = [];
@@ -43,7 +46,6 @@ const store = createStore({
         total_quantity: 0,
         total_price: 0,
       };
-      console.log("clearOrder");
     },
   },
   actions: {

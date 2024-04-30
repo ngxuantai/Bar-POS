@@ -28,9 +28,16 @@
         :data="item"
         :show="showOdering"
         @closeModal="showOdering = false"
+        @getOrderData="getOrderData"
         @order="shwoPurchase = true"
       />
-      <success-modal :show="shwoPurchase" @closeModal="shwoPurchase = false" />
+      <success-modal
+        v-if="listOrderDetailProp.length > 0"
+        :show="shwoPurchase"
+        @closeModal="shwoPurchase = false"
+        :listOrderDetailProp="listOrderDetailProp"
+        :orderInforProp="orderInforProp"
+      />
     </div>
   </div>
 </template>
@@ -41,7 +48,7 @@ import { useRouter } from "vue-router";
 import OrderModal from "../../components/OrderModal/index.vue";
 import SuccessModal from "../SuccessModal/index.vue";
 import { DocumentData } from "firebase/firestore";
-import { Attribute } from "types";
+import { Attribute, OrderDetail, OrderInfor } from "types";
 
 export default defineComponent({
   components: {
@@ -59,6 +66,12 @@ export default defineComponent({
     const showOdering = ref<boolean>(false);
     const shwoPurchase = ref<boolean>(false);
     const item = ref(props.data);
+    const listOrderDetailProp = ref<OrderDetail[]>([]);
+    const orderInforProp = ref<OrderInfor>({
+      discount: 0,
+      total_price: 0,
+      total_quantity: 0,
+    });
 
     const minVolumePrice = (attributes: Attribute[]) => {
       return Math.min(
@@ -70,6 +83,16 @@ export default defineComponent({
         ...attributes.map((attribute: Attribute) => attribute.price)
       );
     };
+    //get order data from order modal
+    const getOrderData = (
+      listOrderDetail: OrderDetail[],
+      orderInfor: OrderInfor
+    ) => {
+      listOrderDetailProp.value = listOrderDetail;
+      orderInforProp.value = orderInfor;
+      showOdering.value = false;
+      shwoPurchase.value = true;
+    };
     const navigateDeatilView = () => {
       router.push("/detail-infor/" + props.data.id);
     };
@@ -77,8 +100,11 @@ export default defineComponent({
       showOdering,
       shwoPurchase,
       item,
+      listOrderDetailProp,
+      orderInforProp,
       minVolumePrice,
       maxVolumePrice,
+      getOrderData,
       navigateDeatilView,
     };
   },

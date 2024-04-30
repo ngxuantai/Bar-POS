@@ -137,16 +137,19 @@
     border-radius: 2px;
     padding: 0;
   }
-  > span {
-    @include flex(row, center, center);
+  input {
     width: 37px;
-    height: 36px;
-    padding: 12px 14px;
+    height: 37px;
+    text-align: center;
+    background: transparent;
+    border: none;
     font-family: $font-family;
     font-size: 20px;
     font-weight: 400;
     line-height: 28px;
-    color: #5b5b5b;
+    &:focus-visible {
+      outline: none;
+    }
   }
 }
 

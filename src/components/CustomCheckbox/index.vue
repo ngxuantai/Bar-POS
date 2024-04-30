@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
   props: {
@@ -20,8 +20,15 @@ export default defineComponent({
       emit("check");
     };
 
+    const checked = computed({
+      get: () => props.status,
+      set: (value) => {
+        emit("update:status", value);
+      },
+    });
+
     return {
-      checked: props.status,
+      checked,
       check,
     };
   },

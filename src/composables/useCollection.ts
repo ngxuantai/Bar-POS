@@ -11,7 +11,14 @@ import {
   DocumentData,
   updateDoc,
 } from "firebase/firestore";
-import { Product, ProductWithAttributes, Attribute } from "../../types";
+import {
+  Product,
+  ProductWithAttributes,
+  Attribute,
+  OrderDetail,
+  OrderInfor,
+  AttributeWithQuantity,
+} from "../../types";
 import store from "../store";
 
 const loading = ref(false);
@@ -26,7 +33,6 @@ async function getAllProducts(id_sub_category: string) {
 
     //loop through list products
     productQuerySnapshot.forEach(async (productDoc) => {
-      console.log(productDoc.data());
       const productData = {
         id: productDoc.id,
         ...productDoc.data(),
@@ -48,7 +54,6 @@ async function getAllProducts(id_sub_category: string) {
       //loop through list product_attributes
       for (const productAttributeDoc of productAttributeQuerySnapshot.docs) {
         const productAttributeData = productAttributeDoc.data();
-        console.log(productAttributeData);
 
         //get list attributes
         const attributeDoc = await getDoc(productAttributeData.id_attribute);
@@ -61,7 +66,6 @@ async function getAllProducts(id_sub_category: string) {
         };
         productWithAttributes.attributes.push(attribute);
       }
-      console.log(productWithAttributes);
       products.value.push(productWithAttributes);
     });
 
@@ -79,6 +83,7 @@ async function getProductById(id: string) {
     const docRef = doc(projectFirestore, "products", id);
     const docSnap: DocumentData = await getDoc(docRef);
     product.value = {
+      id: docSnap.id,
       ...docSnap.data(),
       attributes: [],
     };
@@ -149,76 +154,102 @@ async function getProductsBySubCategory(id_sub_category: string) {
   return { products };
 }
 
-async function addOrder() {
+async function addOrder(
+  orderDetailAgru?: OrderDetail | null,
+  orderInforArgu?: OrderInfor | null
+) {
   loading.value = true;
   try {
-    //create order
+    //create order form store data
     const docOrderRef = await addDoc(collection(projectFirestore, "orders"), {
-      notes: "test",
-      discount: store.state.order_infor.discount,
-      total_quantity: store.state.order_infor.total_quantity,
-      total_price: store.state.order_infor.total_price,
+      notes: "",
+      discount: (orderInforArgu || store.state.order_infor).discount,
+      total_quantity: (orderInforArgu || store.state.order_infor)
+        .total_quantity,
+      total_price: (orderInforArgu || store.state.order_infor).total_price,
     });
-    console.log("Document written with ID: ", docOrderRef.id);
 
-    //create order_details
-    store.state.list_order_detail.forEach(async (orderDetail) => {
-      orderDetail.infor_product.attributes.forEach(async (attribute) => {
+    if (orderDetailAgru) {
+      //create order_details from orderDetailData
+      orderDetailAgru.infor_product.attributes.forEach(async (attribute) => {
         if (attribute.quantity > 0) {
           const orderDetailData = {
             id_order: docOrderRef.id,
-            id_product: orderDetail.infor_product.id,
-            name_product: orderDetail.infor_product.name,
+            id_product: orderDetailAgru.infor_product.id,
+            name_product: orderDetailAgru.infor_product.name,
             id_attribute: attribute.id,
             quantity: attribute.quantity,
             price: attribute.price,
-            discount: orderDetail.discount,
+            discount: orderDetailAgru.discount,
             total_price: attribute.price * attribute.quantity,
           };
           const docOrderDetailRef = await addDoc(
             collection(projectFirestore, "order_details"),
             orderDetailData
           );
-          console.log("Document written with ID: ", docOrderDetailRef.id);
 
-          //update number_product in table product_attributes
-          const productRef = doc(
-            projectFirestore,
-            "products",
-            orderDetail.infor_product.id
-          );
-          const attributeRef = doc(
-            projectFirestore,
-            "attributes",
-            attribute.id
-          );
-          const productAttributeQuery = query(
-            collection(projectFirestore, "product_attributes"),
-            where("id_product", "==", productRef),
-            where("id_attribute", "==", attributeRef)
-          );
-          const productAttributeQuerySnapshot = await getDocs(
-            productAttributeQuery
-          );
-          productAttributeQuerySnapshot.forEach(async (productAttributeDoc) => {
-            const productAttributeData = productAttributeDoc.data();
-            if (productAttributeData.number_product > 0) {
-              await updateDoc(productAttributeDoc.ref, {
-                number_product:
-                  productAttributeData.number_product - attribute.quantity,
-              });
-            }
-          });
+          //update number product in table product_attributes
+          updateNumberProduct(orderDetailAgru, attribute);
         }
       });
-    });
-    // loading.value = false;
+    } else {
+      //create order_details from store data
+      store.state.list_order_detail.forEach(async (orderDetail) => {
+        orderDetail.infor_product.attributes.forEach(async (attribute) => {
+          if (attribute.quantity > 0) {
+            const orderDetailData = {
+              id_order: docOrderRef.id,
+              id_product: orderDetail.infor_product.id,
+              name_product: orderDetail.infor_product.name,
+              id_attribute: attribute.id,
+              quantity: attribute.quantity,
+              price: attribute.price,
+              discount: orderDetail.discount,
+              total_price: attribute.price * attribute.quantity,
+            };
+            const docOrderDetailRef = await addDoc(
+              collection(projectFirestore, "order_details"),
+              orderDetailData
+            );
+
+            //update number product in table product_attributes
+            updateNumberProduct(orderDetail, attribute);
+          }
+        });
+      });
+    }
   } catch (error) {
-    // loading.value = false;
     console.error("Error adding order: ", error);
   } finally {
     loading.value = false;
   }
+}
+
+async function updateNumberProduct(
+  orderDetail: OrderDetail,
+  attribute: AttributeWithQuantity
+) {
+  const productRef = doc(
+    projectFirestore,
+    "products",
+    orderDetail.infor_product.id
+  );
+  const attributeRef = doc(projectFirestore, "attributes", attribute.id);
+  const productAttributeQuery = query(
+    collection(projectFirestore, "product_attributes"),
+    where("id_product", "==", productRef),
+    where("id_attribute", "==", attributeRef)
+  );
+  const productAttributeQuerySnapshot = await getDocs(productAttributeQuery);
+  productAttributeQuerySnapshot.forEach(async (productAttributeDoc) => {
+    const productAttributeData = productAttributeDoc.data();
+    if (productAttributeData.number_product > 0) {
+      await updateDoc(productAttributeDoc.ref, {
+        number_product:
+          productAttributeData.number_product - attribute.quantity,
+      });
+    }
+  });
 }
 
 export {

@@ -35,7 +35,9 @@
             <div class="select-quantity">
               <div class="type">
                 <img src="../../assets/icon/bottle-black.png" alt="bottle" />
-                <span>750 ml bottle</span>
+                <span>{{
+                  getBottleData(orderDetail.infor_product).value + " ml bottle"
+                }}</span>
               </div>
               <p class="price">
                 ${{ getBottleData(orderDetail.infor_product).price }}
@@ -70,7 +72,9 @@
             <div class="select-quantity">
               <div class="type">
                 <img src="../../assets/icon/glass-black.png" alt="glass" />
-                <span>150 ml glass</span>
+                <span>{{
+                  getGlassData(orderDetail.infor_product).value + " ml glass"
+                }}</span>
               </div>
               <p class="price">
                 ${{ getGlassData(orderDetail.infor_product).price }}
@@ -135,7 +139,7 @@
         <div class="total-container">
           <div class="total">
             <h3>Total</h3>
-            <p>{{ orderInfor.total_price - orderInfor.discount }}</p>
+            <p>${{ orderInfor.total_price - orderInfor.discount }}</p>
           </div>
           <p>Please make sure to review your order carefully before ordering</p>
           <a-button @click="shwoPurchaseModal">Order now</a-button>
@@ -255,11 +259,9 @@ export default {
     const shwoPurchaseModal = async () => {
       try {
         await addOrder();
-        console.log(loading.value);
         shwoPurchase.value = true;
         toggleShowCheckout();
         store.dispatch("clearCart");
-        console.log(loading.value);
       } catch (error) {
         console.log(error);
       }

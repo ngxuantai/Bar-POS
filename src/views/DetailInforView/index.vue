@@ -4,7 +4,7 @@
     <div class="back">
       <p @click="navigateHome">Whisky</p>
       <p>/</p>
-      <p>{{ item }}</p>
+      <p>{{ item?.name }}</p>
     </div>
     <div class="wine-infor">
       <div class="img-container">
@@ -12,8 +12,8 @@
       </div>
       <div class="information">
         <div class="infor">
-          <h3>{{ item.name }}</h3>
-          <p>{{ item.description }}</p>
+          <h3>{{ item?.name }}</h3>
+          <p>{{ item?.description }}</p>
         </div>
         <div class="select-container">
           <div
@@ -35,7 +35,7 @@
             >
               <div class="type flex-row-start">
                 <img src="../../assets/icon/bottle-white.png" alt="bottle" />
-                <span>{{ bottle.volume }} ml bottle</span>
+                <span>{{ bottle.value }} ml bottle</span>
               </div>
               <p class="price">${{ bottle.price }}</p>
               <div class="btn-change">
@@ -50,7 +50,14 @@
                 >
                   <minus-outlined />
                 </button>
-                <span>{{ bottle.quantity }}</span>
+                <input
+                  type="type"
+                  inputmode="numeric"
+                  id="quantityBottle"
+                  :value="bottle.quantity"
+                  @input="changeQuantity($event)"
+                  :disabled="bottle.check === false"
+                />
                 <button
                   @click="changeBottle(1)"
                   :class="{
@@ -62,10 +69,11 @@
                   <plus-outlined />
                 </button>
               </div>
-              <p class="real-price">
-                <!-- ${{ item.priceBottle * bottle.quantity }} -->
-              </p>
+              <p class="real-price">${{ bottle.price * bottle.quantity }}</p>
             </div>
+          </div>
+          <div class="error">
+            <p>{{ errorBottle }}</p>
           </div>
           <div
             class="select-row"
@@ -86,9 +94,9 @@
             >
               <div class="type flex-row-start">
                 <img src="../../assets/icon/glass-white.png" alt="glass" />
-                <!-- <span>{{ item.volGlass }} ml glass</span> -->
+                <span>{{ glass.value }} ml glass</span>
               </div>
-              <!-- <p class="price">${{ item.priceGlass }}</p> -->
+              <p class="price">${{ glass.price }}</p>
               <div class="btn-change">
                 <button
                   @click="changeGlass(-1)"
@@ -101,7 +109,14 @@
                 >
                   <minus-outlined />
                 </button>
-                <span>{{ glass.quantity }}</span>
+                <input
+                  type="type"
+                  inputmode="numeric"
+                  id="quantityGlass"
+                  :value="glass.quantity"
+                  @input="changeQuantity($event)"
+                  :disabled="glass.check === false"
+                />
                 <button
                   @click="changeGlass(1)"
                   :class="{
@@ -113,12 +128,15 @@
                   <plus-outlined />
                 </button>
               </div>
-              <!-- <p class="real-price">${{ item.priceGlass * glass.quantity }}</p> -->
+              <p class="real-price">${{ glass.price * glass.quantity }}</p>
             </div>
+          </div>
+          <div class="error">
+            <p>{{ errorGlass }}</p>
           </div>
         </div>
         <div class="add-cart">
-          <button>Add to cart</button>
+          <button @click="addToCart">Add to cart</button>
         </div>
       </div>
     </div>
@@ -170,6 +188,7 @@
 <script lang="ts">
 import { reactive, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
 import SearchHeader from "../../components/SearchHeader/index.vue";
 import CustomCheckbox from "../../components/CustomCheckbox/index.vue";
 // import CardItem from "../../components/CardItem.vue";
@@ -179,7 +198,7 @@ import {
   getProductById,
 } from "../../composables/useCollection";
 import { DocumentData } from "firebase/firestore";
-import { ProductWithAttributes } from "../../../types";
+import { ProductWithAttributes, Attribute } from "../../../types";
 
 interface Tab {
   id: number;
@@ -187,9 +206,7 @@ interface Tab {
   isActive: boolean;
 }
 
-interface Item {
-  volume: number;
-  price: number;
+interface Item extends Attribute {
   check: boolean;
   quantity: number;
 }
@@ -205,34 +222,40 @@ export default {
   setup() {
     const router = useRouter();
     const route = useRoute();
+    const store = useStore();
     const listTabs = reactive<Tab[]>([
       { id: 1, title: "Today's special", isActive: true },
       { id: 2, title: "Customer Favorite", isActive: false },
       { id: 3, title: "Discounts", isActive: false },
     ]);
+    const item = ref<ProductWithAttributes>();
     const similarItems = ref<DocumentData[]>([]);
-
-    const bottle = reactive<Item>({
-      volume: 0,
+    const bottle = ref<Item>({
+      id: "",
+      name: "",
+      value: 0,
       price: 0,
+      number_product: 0,
       check: false,
       quantity: 0,
     });
-    const glass = reactive<Item>({
-      volume: 0,
+    const errorBottle = ref<string>("");
+    const glass = ref<Item>({
+      id: "",
+      name: "",
+      value: 0,
       price: 0,
+      number_product: 0,
       check: false,
       quantity: 0,
     });
+    const errorGlass = ref<string>("");
 
     async function getProductData() {
-      const item = ref<ProductWithAttributes>();
       const id = route.params.id;
       try {
         const data = await getProductById(id as string);
-        console.log(data.product.value);
         item.value = data.product.value;
-        console.log(item.value);
       } catch (error) {
         console.error(error);
       }
@@ -240,38 +263,146 @@ export default {
 
     getProductData();
 
-    // watch(item, () => {
-    //   console.log(item.value);
-    // });
+    watch(item, () => {
+      if (item.value !== undefined) {
+        const bottleData = item.value.attributes.find(
+          (attribute: any) => attribute.name === "bottle"
+        );
+
+        bottle.value = {
+          ...bottleData,
+          check: false,
+          quantity: 0,
+        } as Item;
+        const glassData = item.value.attributes.find(
+          (attribute: any) => attribute.name === "glass"
+        );
+        glass.value = {
+          ...glassData,
+          check: false,
+          quantity: 0,
+        } as Item;
+      }
+    });
 
     const changeTab = (tab: Tab) => {
       listTabs.forEach((item) => {
         item.isActive = item.id === tab.id;
       });
     };
+    const changeQuantity = (event: any) => {
+      const newValue = parseInt(event.target.value);
+      if (
+        event.target.id === "quantityBottle" &&
+        event.target.value !== "" &&
+        !isNaN(newValue)
+      )
+        changeBottle(newValue - bottle.value.quantity);
+      else if (
+        event.target.id === "quantityGlass" &&
+        event.target.value !== "" &&
+        !isNaN(newValue)
+      )
+        changeGlass(newValue - glass.value.quantity);
+    };
     const changeBottle = (number: number) => {
-      bottle.quantity += number;
+      bottle.value.quantity += number;
+      if (bottle.value.quantity < 0) {
+        bottle.value.quantity = 0;
+      }
+      if (bottle.value.quantity > bottle.value.number_product) {
+        errorBottle.value =
+          "The quantity you selected has reached the maximum capacity for this product";
+      } else {
+        errorBottle.value = "";
+      }
     };
     const changeGlass = (number: number) => {
-      glass.quantity += number;
+      glass.value.quantity += number;
+      if (glass.value.quantity < 0) {
+        glass.value.quantity = 0;
+      }
+      if (glass.value.quantity > glass.value.number_product) {
+        errorGlass.value =
+          "The quantity you selected has reached the maximum capacity for this product";
+      } else {
+        errorGlass.value = "";
+      }
     };
     const navigateHome = () => {
       router.push("/home");
     };
+    const resetData = () => {
+      bottle.value = {
+        ...bottle.value,
+        check: false,
+        quantity: 0,
+      };
+      glass.value = {
+        ...glass.value,
+        check: false,
+        quantity: 0,
+      };
+    };
+    const addToCart = () => {
+      if (bottle.value.quantity === 0 && glass.value.quantity === 0) {
+        errorBottle.value = "Please select the quantity";
+        errorGlass.value = "Please select the quantity";
+        return;
+      } else if (item.value) {
+        const product = {
+          infor_product: {
+            id: item.value.id,
+            name: item.value.name,
+            description: item.value.description,
+            about: item.value.about,
+            id_category: item.value.id_category,
+            attributes: [
+              {
+                id: bottle.value.id,
+                name: bottle.value.name,
+                value: bottle.value.value,
+                price: bottle.value.price,
+                quantity: bottle.value.quantity,
+              },
+              {
+                id: glass.value.id,
+                name: glass.value.name,
+                value: glass.value.value,
+                price: glass.value.price,
+                quantity: glass.value.quantity,
+              },
+            ],
+          },
+          notes: "",
+          discount: 0,
+          total_quantity: bottle.value.quantity + glass.value.quantity,
+          total_price:
+            bottle.value.price * bottle.value.quantity +
+            glass.value.price * glass.value.quantity,
+        };
+        store.dispatch("addCart", product);
+        resetData();
+      }
+    };
     return {
       listTabs,
       bottle,
+      errorBottle,
       glass,
-      // item,
+      errorGlass,
+      item,
       changeTab,
-      navigateHome,
+      changeQuantity,
       changeBottle,
       changeGlass,
+      navigateHome,
+      addToCart,
     };
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @import "./style.scss";
 </style>

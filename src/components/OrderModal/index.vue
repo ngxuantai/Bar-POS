@@ -38,7 +38,14 @@
                 >
                   <minus-outlined />
                 </a-button>
-                <span>{{ bottle.quantity }}</span>
+                <input
+                  type="type"
+                  inputmode="numeric"
+                  id="quantityBottle"
+                  :value="bottle.quantity"
+                  @input="changeQuantity($event)"
+                  :disabled="bottle.check === false"
+                />
                 <a-button
                   @click="changeBottle(1)"
                   :class="{
@@ -79,7 +86,14 @@
                 >
                   <minus-outlined />
                 </a-button>
-                <span>{{ glass.quantity }}</span>
+                <input
+                  type="type"
+                  inputmode="numeric"
+                  id="quantityGlass"
+                  :value="glass.quantity"
+                  @input="changeQuantity($event)"
+                  :disabled="glass.check === false"
+                />
                 <a-button
                   @click="changeGlass(1)"
                   :class="{
@@ -134,6 +148,12 @@
           <a-button class="add-cart" @click="addCart">Add to cart</a-button>
           <a-button class="order" @click="order">Order now</a-button>
         </div>
+        <success-modal
+          :show="shwoPurchase"
+          @closeModal="shwoPurchase = false"
+          :listOrderDetailProp="listOrderDetail"
+          :orderInforProp="orderInfor"
+        />
       </div>
     </div>
   </div>
@@ -141,6 +161,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 import {
   CloseOutlined,
   PlusOutlined,
@@ -149,10 +170,10 @@ import {
   GiftOutlined,
 } from "@ant-design/icons-vue";
 import CustomCheckbox from "../CustomCheckbox/index.vue";
+import SuccessModal from "../SuccessModal/index.vue";
 // import { IMG_URL } from "../../constants";
-import { getAttributeById } from "../../composables/useCollection";
-import { useStore } from "vuex";
-import { Attribute } from "../../../types";
+import { getAttributeById, addOrder } from "../../composables/useCollection";
+import { Attribute, OrderDetail, OrderInfor } from "../../../types";
 
 interface Item extends Attribute {
   check: boolean;
@@ -177,6 +198,7 @@ export default defineComponent({
     EditOutlined,
     GiftOutlined,
     CustomCheckbox,
+    SuccessModal,
   },
   setup(props, { emit }) {
     const store = useStore();
@@ -200,6 +222,15 @@ export default defineComponent({
       quantity: 0,
     });
     const errorGlass = ref<string>("");
+    const notes = ref<string>("");
+    const promoCode = ref<string>("");
+    const shwoPurchase = ref<boolean>(false);
+    const listOrderDetail = ref<OrderDetail[]>([]);
+    const orderInfor = ref<OrderInfor>({
+      discount: 0,
+      total_price: 0,
+      total_quantity: 0,
+    });
 
     function getAttributeData() {
       props.data.attributes.map(async (attribute: any) => {
@@ -226,8 +257,21 @@ export default defineComponent({
     }
     getAttributeData();
 
-    const notes = ref<string>("");
-    const promoCode = ref<string>("");
+    const changeQuantity = (event: any) => {
+      const newValue = parseInt(event.target.value);
+      if (
+        event.target.id === "quantityBottle" &&
+        event.target.value !== "" &&
+        !isNaN(newValue)
+      )
+        changeBottle(newValue - bottle.value.quantity);
+      else if (
+        event.target.id === "quantityGlass" &&
+        event.target.value !== "" &&
+        !isNaN(newValue)
+      )
+        changeGlass(newValue - glass.value.quantity);
+    };
     const changeBottle = (number: number) => {
       bottle.value.quantity += number;
       if (bottle.value.quantity < 0) {
@@ -238,6 +282,18 @@ export default defineComponent({
           "The quantity you selected has reached the maximum capacity for this product";
       } else {
         errorBottle.value = "";
+      }
+    };
+    const changeGlass = (number: number) => {
+      glass.value.quantity += number;
+      if (glass.value.quantity < 0) {
+        glass.value.quantity = 0;
+      }
+      if (glass.value.quantity > glass.value.number_product) {
+        errorGlass.value =
+          "The quantity you selected has reached the maximum capacity for this product";
+      } else {
+        errorGlass.value = "";
       }
     };
     const resetData = () => {
@@ -254,20 +310,42 @@ export default defineComponent({
       notes.value = "";
       promoCode.value = "";
     };
-    const changeGlass = (number: number) => {
-      glass.value.quantity += number;
-      if (glass.value.quantity < 0) {
-        glass.value.quantity = 0;
-      }
-      if (glass.value.quantity > glass.value.number_product) {
-        errorGlass.value =
-          "The quantity you selected has reached the maximum capacity for this product";
-      } else {
-        errorGlass.value = "";
-      }
-    };
     const close = () => {
       emit("closeModal");
+    };
+    const createOrderDetail = () => {
+      const orderDetail = {
+        infor_product: {
+          id: props.data.id,
+          name: props.data.name,
+          description: props.data.description,
+          about: props.data.about,
+          id_category: props.data.id_category,
+          attributes: [
+            {
+              id: bottle.value.id,
+              name: bottle.value.name,
+              value: bottle.value.value,
+              price: bottle.value.price,
+              quantity: bottle.value.quantity,
+            },
+            {
+              id: glass.value.id,
+              name: glass.value.name,
+              value: glass.value.value,
+              price: glass.value.price,
+              quantity: glass.value.quantity,
+            },
+          ],
+        },
+        notes: notes.value,
+        discount: 0,
+        total_quantity: bottle.value.quantity + glass.value.quantity,
+        total_price_product:
+          bottle.value.price * bottle.value.quantity +
+          glass.value.price * glass.value.quantity,
+      } as OrderDetail;
+      return orderDetail;
     };
     const addCart = () => {
       // emit("addCart");
@@ -277,7 +355,6 @@ export default defineComponent({
         errorBottle.value === "" &&
         errorGlass.value === ""
       ) {
-        console.log("add cart");
         const product = {
           infor_product: {
             id: props.data.id,
@@ -305,18 +382,36 @@ export default defineComponent({
           notes: notes.value,
           discount: 0,
           total_quantity: bottle.value.quantity + glass.value.quantity,
-          total_price:
+          total_price_product:
             bottle.value.price * bottle.value.quantity +
             glass.value.price * glass.value.quantity,
         };
         store.dispatch("addCart", product);
+        // addStore();
+        resetData();
+        emit("closeModal");
       }
-      resetData();
-      emit("closeModal");
     };
-    const order = () => {
+    const order = async () => {
       emit("order");
-      emit("closeModal");
+      const orderDetail = createOrderDetail();
+      listOrderDetail.value = [orderDetail];
+      orderInfor.value = {
+        discount: 0,
+        total_price: orderDetail.total_price_product,
+        total_quantity: orderDetail.total_quantity,
+      };
+      try {
+        await addOrder(orderDetail, {
+          discount: 0,
+          total_price: orderDetail.total_price_product,
+          total_quantity: orderDetail.total_quantity,
+        });
+        emit("getOrderData", listOrderDetail.value, orderInfor.value);
+        resetData();
+      } catch (error) {
+        console.log(error);
+      }
     };
     return {
       // IMG_URL,
@@ -324,9 +419,13 @@ export default defineComponent({
       errorBottle,
       glass,
       errorGlass,
-      item: props.data,
       notes,
       promoCode,
+      shwoPurchase,
+      listOrderDetail,
+      orderInfor,
+      item: props.data,
+      changeQuantity,
       changeBottle,
       changeGlass,
       close,
