@@ -40,4 +40,11 @@ interface OrderInfor {
   total_price: number;
 }
 
-export type { Product, ProductWithAttributes, Attribute, AttributeWithQuantity, ProductWithQuantity, OrderDetail, OrderInfor };
+interface Category {
+  id: string;
+  name: string;
+  check: boolean;
+  children?: Category[];
+}
+
+export type { Product, ProductWithAttributes, Attribute, AttributeWithQuantity, ProductWithQuantity, OrderDetail, OrderInfor, Category };

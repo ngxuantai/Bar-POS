@@ -3,26 +3,28 @@
     <div class="logo">
       <img src="../../assets/image/logo.png" alt="logo" @click="navigateHome" />
     </div>
-    <sub-menu :items="items" />
+    <sub-menu v-if="items" :items="items" />
   </div>
 </template>
 
 <script lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import SubMenu from "../SubMenu/index.vue";
+import { getAllCategory } from "../../composables/useCollection";
+import { Category } from "types";
 
-interface Item {
-  key: string;
-  title: string;
-  show: boolean;
-  children: SubItem[];
-}
-interface SubItem {
-  key: string;
-  label: string;
-  check: boolean;
-}
+// interface Item {
+//   key: string;
+//   title: string;
+//   show: boolean;
+//   children: SubItem[];
+// }
+// interface SubItem {
+//   key: string;
+//   label: string;
+//   check: boolean;
+// }
 
 export default {
   components: {
@@ -30,63 +32,17 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const items = ref<Item[]>([
-      {
-        key: "1",
-        title: "Whisky",
-        show: false,
-        children: [
-          { key: "1", label: "Single Male Whisky", check: false },
-          { key: "2", label: "Hush Whisky", check: false },
-          { key: "3", label: "American Whisky", check: false },
-          { key: "4", label: "Blended Whisky", check: false },
-        ],
-      },
-      {
-        key: "2",
-        title: "Classic Cocktails",
-        show: false,
-        children: [
-          { key: "1", label: "Single Male Whisky", check: false },
-          { key: "2", label: "Hush Whisky", check: false },
-          { key: "3", label: "American Whisky", check: false },
-          { key: "4", label: "Blended Whisky", check: false },
-        ],
-      },
-      {
-        key: "3",
-        title: "Wines",
-        show: false,
-        children: [
-          { key: "1", label: "Single Male Whisky", check: false },
-          { key: "2", label: "Hush Whisky", check: false },
-          { key: "3", label: "American Whisky", check: false },
-          { key: "4", label: "Blended Whisky", check: false },
-        ],
-      },
-      {
-        key: "4",
-        title: "Beers",
-        show: false,
-        children: [
-          { key: "1", label: "Single Male Whisky", check: false },
-          { key: "2", label: "Hush Whisky", check: false },
-          { key: "3", label: "American Whisky", check: false },
-          { key: "4", label: "Blended Whisky", check: false },
-        ],
-      },
-      {
-        key: "5",
-        title: "Jusices & Water",
-        show: false,
-        children: [
-          { key: "1", label: "Single Male Whisky", check: false },
-          { key: "2", label: "Hush Whisky", check: false },
-          { key: "3", label: "American Whisky", check: false },
-          { key: "4", label: "Blended Whisky", check: false },
-        ],
-      },
-    ]);
+    const items = ref<Category[]>([]);
+    const getCategory = async () => {
+      try {
+        const data = await getAllCategory();
+        items.value = data?.categories.value || [];
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    getCategory();
 
     const navigateHome = () => {
       router.push("/home");

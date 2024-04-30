@@ -10,8 +10,10 @@ import {
   addDoc,
   DocumentData,
   updateDoc,
+  Query,
 } from "firebase/firestore";
 import {
+  Category,
   Product,
   ProductWithAttributes,
   Attribute,
@@ -23,12 +25,85 @@ import store from "../store";
 
 const loading = ref(false);
 
-async function getAllProducts(id_sub_category: string) {
+async function getAllCategory() {
+  const categories = ref<Category[]>([]);
+  try {
+    const parentCategoryQuery = query(
+      collection(projectFirestore, "categories"),
+      where("id_parent_category", "==", "0")
+    );
+    const parentCategoryQuerySnapshot = await getDocs(parentCategoryQuery);
+    parentCategoryQuerySnapshot.forEach(async (doc: DocumentData) => {
+      const childCategories = await getChildCategoryById(doc.id);
+      categories.value.push({
+        id: doc.id,
+        name: doc.data().name,
+        check: false,
+        children: childCategories,
+      });
+    });
+    return { categories };
+  } catch (error) {
+    console.error("Error getting documents: ", error);
+  }
+}
+
+async function getChildCategoryById(id: string) {
+  try {
+    const childCategories: Category[] = [];
+    const docRef = doc(projectFirestore, "categories", id);
+    const childrenCategoryQuery = query(
+      collection(projectFirestore, "categories"),
+      where("id_parent_category", "==", docRef)
+    );
+    const childrenCategoryQuerySnapshot = await getDocs(childrenCategoryQuery);
+    childrenCategoryQuerySnapshot.forEach((doc: DocumentData) => {
+      childCategories.push({
+        id: doc.id,
+        name: doc.data().name,
+        check: false,
+        children: [],
+      });
+    });
+    return childCategories;
+  } catch (error) {
+    console.error("Error fetching category:", error);
+    throw error;
+  }
+}
+
+async function getAllProducts(id_category?: string, id_sub_category?: string) {
   const products = ref<ProductWithAttributes[]>([]);
 
   try {
     //get list products
-    const productQuery = collection(projectFirestore, "products");
+    let productQuery: Query<DocumentData> = collection(
+      projectFirestore,
+      "products"
+    );
+
+    if (id_category) {
+      const childCategories = await getChildCategoryById(id_category);
+      const childCategoryRef = childCategories.map((childCategory) =>
+        doc(projectFirestore, "categories", childCategory.id)
+      );
+
+      productQuery = query(
+        productQuery,
+        where("id_category", "in", childCategoryRef)
+      );
+    }
+
+    if (id_sub_category) {
+      productQuery = query(
+        productQuery,
+        where(
+          "id_category",
+          "==",
+          doc(projectFirestore, "categories", id_sub_category)
+        )
+      );
+    }
     const productQuerySnapshot = await getDocs(productQuery);
 
     //loop through list products
@@ -253,6 +328,7 @@ async function updateNumberProduct(
 }
 
 export {
+  getAllCategory,
   getAllProducts,
   getAttributeById,
   getProductById,

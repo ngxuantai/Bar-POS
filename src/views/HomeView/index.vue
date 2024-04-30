@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, defineComponent, watch } from "vue";
+import { useRoute } from "vue-router";
 import SearchHeader from "../../components/SearchHeader/index.vue";
 import ListCardItem from "../../components/ListCardItem/index.vue";
 import { DocumentData } from "firebase/firestore";
@@ -25,12 +26,13 @@ interface Tab {
   isActive: boolean;
 }
 
-export default {
+export default defineComponent({
   components: {
     SearchHeader,
     ListCardItem,
   },
   setup() {
+    const route = useRoute();
     const searchText = ref<string>("");
     const listTabs = reactive<Tab[]>([
       { id: 1, title: "Today's special", isActive: true },
@@ -41,7 +43,10 @@ export default {
 
     async function getProductsData() {
       try {
-        const data = await getAllProducts("m1ubzXQssvMhhrFT1ZDj");
+        const data = await getAllProducts(
+          route.query.id as string,
+          route.query.id_sub as string
+        );
         listItems.value = data.products.value;
       } catch (error) {
         console.error(error);
@@ -49,6 +54,13 @@ export default {
     }
 
     getProductsData();
+
+    watch(
+      () => route.query,
+      () => {
+        getProductsData();
+      }
+    );
 
     const changeSearch = (text: string) => {
       searchText.value = text;
@@ -74,7 +86,7 @@ export default {
       changeTab,
     };
   },
-};
+});
 </script>
 
 <!-- <style lang="scss" scoped>

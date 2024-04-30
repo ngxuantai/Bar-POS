@@ -16,13 +16,19 @@ const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "login" */ "../views/LoginView/index.vue"),
   },
   {
-    path: "/home",
+    path: "/home/:id",
     name: "home",
     component: Layout,
     children: [
       {
         path: "",
         name: "home",
+        component: HomeView,
+      },
+      // Thêm route cho "/home" để hiển thị component HomeView khi không có id
+      {
+        path: "/home",
+        name: "homeNoId",
         component: HomeView,
       },
     ],
