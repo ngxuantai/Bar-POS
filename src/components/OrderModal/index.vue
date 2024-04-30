@@ -173,7 +173,12 @@ import CustomCheckbox from "../CustomCheckbox/index.vue";
 import SuccessModal from "../SuccessModal/index.vue";
 // import { IMG_URL } from "../../constants";
 import { getAttributeById, addOrder } from "../../composables/useCollection";
-import { Attribute, OrderDetail, OrderInfor } from "../../../types";
+import {
+  Attribute,
+  AttributeWithQuantity,
+  OrderDetail,
+  OrderInfor,
+} from "../../../types";
 
 interface Item extends Attribute {
   check: boolean;
@@ -233,12 +238,12 @@ export default defineComponent({
     });
 
     function getAttributeData() {
-      props.data.attributes.map(async (attribute: any) => {
+      props.data.attributes.map(async (attribute: AttributeWithQuantity) => {
         const data = await getAttributeById(attribute.id as string);
         attribute.name = data;
       });
       const bottleData: Attribute = props.data.attributes.find(
-        (attribute: any) => attribute.name === "bottle"
+        (attribute: AttributeWithQuantity) => attribute.name === "bottle"
       );
 
       bottle.value = {
@@ -247,7 +252,7 @@ export default defineComponent({
         quantity: 0,
       };
       const glassData = props.data.attributes.find(
-        (attribute: any) => attribute.name === "glass"
+        (attribute: AttributeWithQuantity) => attribute.name === "glass"
       );
       glass.value = {
         ...glassData,
@@ -257,17 +262,18 @@ export default defineComponent({
     }
     getAttributeData();
 
-    const changeQuantity = (event: any) => {
-      const newValue = parseInt(event.target.value);
+    const changeQuantity = (event: Event) => {
+      const target = event.target as HTMLInputElement;
+      const newValue = parseInt(target.value);
       if (
-        event.target.id === "quantityBottle" &&
-        event.target.value !== "" &&
+        target.id === "quantityBottle" &&
+        target.value !== "" &&
         !isNaN(newValue)
       )
         changeBottle(newValue - bottle.value.quantity);
       else if (
-        event.target.id === "quantityGlass" &&
-        event.target.value !== "" &&
+        target.id === "quantityGlass" &&
+        target.value !== "" &&
         !isNaN(newValue)
       )
         changeGlass(newValue - glass.value.quantity);

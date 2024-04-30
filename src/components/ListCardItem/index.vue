@@ -24,23 +24,34 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import {
+  ref,
+  defineComponent,
+  onMounted,
+  onBeforeUnmount,
+  computed,
+} from "vue";
 // import { useRouter } from "vue-router";
 import { DownOutlined } from "@ant-design/icons-vue";
 import CardItem from "../CardItem/index.vue";
-import { getAllProducts } from "../../composables/useCollection";
 import { DocumentData } from "firebase/firestore";
 interface Option {
   value: string;
   text: string;
 }
 
-export default {
+export default defineComponent({
+  props: {
+    listItemsProp: {
+      type: Array as () => DocumentData[],
+      default: () => [],
+    },
+  },
   components: {
     DownOutlined,
     CardItem,
   },
-  setup() {
+  setup(props) {
     // const router = useRouter();
     const itemsContainerRef = ref<HTMLElement | null>(null);
     const colCount = ref<number>(4);
@@ -49,7 +60,6 @@ export default {
       value: "option1",
       text: "All products",
     });
-    const listItems = ref<DocumentData[]>([]);
     const options = [
       { value: "option1", text: "All products" },
       { value: "option2", text: "Latest" },
@@ -57,25 +67,17 @@ export default {
       { value: "option4", text: "Price hight to low" },
     ];
 
-    async function getProductsData() {
-      try {
-        const data = await getAllProducts("m1ubzXQssvMhhrFT1ZDj");
-        listItems.value = data.products.value;
-      } catch (error) {
-        console.error(error);
-      }
-    }
+    const listItems = computed(() => {
+      return props.listItemsProp;
+    });
 
-    getProductsData();
-
-    onMounted(async () => {
+    onMounted(() => {
       updateColCount();
       window.addEventListener("resize", updateColCount);
     });
 
-    onBeforeUnmount(async () => {
+    onBeforeUnmount(() => {
       window.removeEventListener("resize", updateColCount);
-      await getProductsData();
     });
 
     const toggleShow = () => {
@@ -103,7 +105,7 @@ export default {
       selectOption,
     };
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
