@@ -82,7 +82,7 @@ async function getAllProducts(id_category?: string, id_sub_category?: string) {
       "products"
     );
 
-    if (id_category) {
+    if (id_category && id_category !== "") {
       const childCategories = await getChildCategoryById(id_category);
       const childCategoryRef = childCategories.map((childCategory) =>
         doc(projectFirestore, "categories", childCategory.id)
@@ -258,7 +258,7 @@ async function addOrder(
             discount: orderDetailAgru.discount,
             total_price: attribute.price * attribute.quantity,
           };
-          const docOrderDetailRef = await addDoc(
+          await addDoc(
             collection(projectFirestore, "order_details"),
             orderDetailData
           );
@@ -282,7 +282,7 @@ async function addOrder(
               discount: orderDetail.discount,
               total_price: attribute.price * attribute.quantity,
             };
-            const docOrderDetailRef = await addDoc(
+            await addDoc(
               collection(projectFirestore, "order_details"),
               orderDetailData
             );

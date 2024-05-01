@@ -8,23 +8,11 @@
 </template>
 
 <script lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import SubMenu from "../SubMenu/index.vue";
 import { getAllCategory } from "../../composables/useCollection";
 import { Category } from "types";
-
-// interface Item {
-//   key: string;
-//   title: string;
-//   show: boolean;
-//   children: SubItem[];
-// }
-// interface SubItem {
-//   key: string;
-//   label: string;
-//   check: boolean;
-// }
 
 export default {
   components: {

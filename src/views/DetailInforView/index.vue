@@ -164,23 +164,13 @@
           <span>Primitivo</span>
         </div>
       </div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-        eiusmod tempor incididunt ut labore
-      </p>
+      <p>{{ item.about }}</p>
     </div>
     <div class="similar">
       <h3>Other similar products</h3>
-      <!-- <div class="list-items">
-        <card-item />
-        <card-item />
-        <card-item />
-        <card-item />
-      </div> -->
+      <div class="list-items">
+        <card-item v-for="item in similarItems" :key="item.id" :data="item" />
+      </div>
     </div>
   </div>
 </template>
@@ -191,10 +181,10 @@ import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import SearchHeader from "../../components/SearchHeader/index.vue";
 import CustomCheckbox from "../../components/CustomCheckbox/index.vue";
-// import CardItem from "../../components/CardItem.vue";
+import CardItem from "../../components/CardItem/index.vue";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
 import {
-  getProductsBySubCategory,
+  getAllProducts,
   getProductById,
 } from "../../composables/useCollection";
 import { DocumentData } from "firebase/firestore";
@@ -215,7 +205,7 @@ export default {
   components: {
     SearchHeader,
     CustomCheckbox,
-    // CardItem,
+    CardItem,
     PlusOutlined,
     MinusOutlined,
   },
@@ -229,7 +219,7 @@ export default {
       { id: 3, title: "Discounts", isActive: false },
     ]);
     const item = ref<ProductWithAttributes>();
-    const similarItems = ref<DocumentData[]>([]);
+    const similarItems = ref<ProductWithAttributes[]>([]);
     const bottle = ref<Item>({
       id: "",
       name: "",
@@ -260,11 +250,20 @@ export default {
         console.error(error);
       }
     }
+    async function getSimilarProduct(item: ProductWithAttributes) {
+      try {
+        const data = await getAllProducts("", item.id_category.id);
+        similarItems.value = data.products.value;
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
     getProductData();
 
     watch(item, () => {
       if (item.value !== undefined) {
+        getSimilarProduct(item.value);
         const bottleData = item.value.attributes.find(
           (attribute: any) => attribute.name === "bottle"
         );
@@ -284,6 +283,13 @@ export default {
         } as Item;
       }
     });
+
+    watch(
+      () => route.params.id,
+      () => {
+        getProductData();
+      }
+    );
 
     const changeTab = (tab: Tab) => {
       listTabs.forEach((item) => {
@@ -377,7 +383,7 @@ export default {
           notes: "",
           discount: 0,
           total_quantity: bottle.value.quantity + glass.value.quantity,
-          total_price:
+          total_price_product:
             bottle.value.price * bottle.value.quantity +
             glass.value.price * glass.value.quantity,
         };
@@ -392,6 +398,7 @@ export default {
       glass,
       errorGlass,
       item,
+      similarItems,
       changeTab,
       changeQuantity,
       changeBottle,

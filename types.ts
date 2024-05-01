@@ -1,9 +1,11 @@
+import { DocumentData } from "firebase/firestore";
+
 interface Product {
   id: string;
   name: string;
   description: string;
   about: string;
-  id_category: string;
+  id_category: DocumentData;
 }
 
 interface ProductWithAttributes extends Product {
