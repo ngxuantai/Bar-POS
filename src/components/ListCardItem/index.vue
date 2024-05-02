@@ -3,7 +3,7 @@
     <div class="sort">
       <h3>Sort by:</h3>
       <div class="custom-select" @click="toggleShow">
-        {{ selected.text }}
+        <h4>{{ selected.text }}</h4>
         <down-outlined />
         <div v-if="show" class="list-option">
           <div
@@ -31,10 +31,9 @@ import {
   onBeforeUnmount,
   computed,
 } from "vue";
-// import { useRouter } from "vue-router";
 import { DownOutlined } from "@ant-design/icons-vue";
 import CardItem from "../CardItem/index.vue";
-import { DocumentData } from "firebase/firestore";
+import { ProductWithAttributes } from "types";
 interface Option {
   value: string;
   text: string;
@@ -43,7 +42,7 @@ interface Option {
 export default defineComponent({
   props: {
     listItemsProp: {
-      type: Array as () => DocumentData[],
+      type: Array as () => ProductWithAttributes[],
       default: () => [],
     },
   },
@@ -51,8 +50,7 @@ export default defineComponent({
     DownOutlined,
     CardItem,
   },
-  setup(props) {
-    // const router = useRouter();
+  setup(props, { emit }) {
     const itemsContainerRef = ref<HTMLElement | null>(null);
     const colCount = ref<number>(4);
     const show = ref<boolean>(false);
@@ -85,7 +83,7 @@ export default defineComponent({
     };
     const selectOption = (option: Option) => {
       selected.value = option;
-      toggleShow();
+      emit("changeOption", option.value);
     };
 
     const updateColCount = () => {

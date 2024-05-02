@@ -1,7 +1,8 @@
+<!-- :style="{ right: right }" -->
 <template>
   <button
     class="badgecart"
-    :style="{ right: right }"
+    :class="{ right: show }"
     @click="toggleShowCheckout"
   >
     <a-badge :count="orderInfor.total_quantity">
@@ -172,7 +173,7 @@ import {
   ProductWithQuantity,
   OrderDetail,
 } from "../../../types";
-import { loading, addOrder } from "../../composables/useCollection";
+import { addOrder } from "../../composables/useCollection";
 
 export default {
   components: {

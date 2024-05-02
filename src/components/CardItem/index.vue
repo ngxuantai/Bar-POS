@@ -7,12 +7,14 @@
       <h4>{{ item.name }}</h4>
       <div class="detail">
         <div class="first-row">
-          <div v-for="attribute in item.attributes" :key="attribute.id">
-            <!-- <img
-              :src="'../assets/icon/' + attribute.name + '.png'"
-              alt="imae"
-            /> -->
-            {{ attribute.value }}ml {{ attribute.name }}
+          <!-- <div v-for="attribute in item.attributes" :key="attribute.id"> -->
+          <div>
+            <img src="../../assets/icon/glass.png" alt="image" />
+            {{ getGlassData(item)?.value }}ml {{ getGlassData(item)?.name }}
+          </div>
+          <div>
+            <img src="../../assets/icon/bottle.png" alt="image" />
+            {{ getBottleData(item)?.value }}ml {{ getBottleData(item)?.name }}
           </div>
         </div>
       </div>
@@ -47,8 +49,12 @@ import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import OrderModal from "../../components/OrderModal/index.vue";
 import SuccessModal from "../SuccessModal/index.vue";
-import { DocumentData } from "firebase/firestore";
-import { Attribute, OrderDetail, OrderInfor } from "types";
+import {
+  Attribute,
+  OrderDetail,
+  OrderInfor,
+  ProductWithAttributes,
+} from "types";
 
 export default defineComponent({
   components: {
@@ -57,7 +63,7 @@ export default defineComponent({
   },
   props: {
     data: {
-      type: Object as () => DocumentData,
+      type: Object as () => ProductWithAttributes,
       required: true,
     },
   },
@@ -73,6 +79,18 @@ export default defineComponent({
       total_quantity: 0,
     });
 
+    const getBottleData = (product: ProductWithAttributes) => {
+      const attribute = product.attributes.find(
+        (attribute) => attribute.name === "bottle"
+      );
+      return attribute;
+    };
+    const getGlassData = (product: ProductWithAttributes) => {
+      const attribute = product.attributes.find(
+        (attribute) => attribute.name === "glass"
+      );
+      return attribute;
+    };
     const minVolumePrice = (attributes: Attribute[]) => {
       return Math.min(
         ...attributes.map((attribute: Attribute) => attribute.price)
@@ -102,6 +120,8 @@ export default defineComponent({
       item,
       listOrderDetailProp,
       orderInforProp,
+      getBottleData,
+      getGlassData,
       minVolumePrice,
       maxVolumePrice,
       getOrderData,

@@ -6,6 +6,7 @@ interface Product {
   description: string;
   about: string;
   id_category: DocumentData;
+  time_create: Date;
 }
 
 interface ProductWithAttributes extends Product {

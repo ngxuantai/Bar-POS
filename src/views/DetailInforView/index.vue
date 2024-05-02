@@ -101,9 +101,9 @@
                 <button
                   @click="changeGlass(-1)"
                   :class="{
-                    'btn-disable':
-                      glass.quantity === 0 && glass.check === false,
                     'btn-active': glass.quantity > 0,
+                    'btn-disable':
+                      glass.quantity === 0 || glass.check === false,
                   }"
                   :disabled="glass.quantity === 0 || glass.check === false"
                 >
@@ -114,7 +114,7 @@
                   inputmode="numeric"
                   id="quantityGlass"
                   :value="glass.quantity"
-                  @input="changeQuantity($event)"
+                  @input="changeQuantity"
                   :disabled="glass.check === false"
                 />
                 <button
@@ -184,11 +184,9 @@ import CustomCheckbox from "../../components/CustomCheckbox/index.vue";
 import CardItem from "../../components/CardItem/index.vue";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
 import {
-  getAllProducts,
   getProductById,
   getSimilarProducts,
 } from "../../composables/useCollection";
-import { DocumentData } from "firebase/firestore";
 import { ProductWithAttributes, Attribute } from "../../../types";
 
 interface Tab {
@@ -254,7 +252,6 @@ export default {
     async function getSimilarProduct(item: ProductWithAttributes) {
       try {
         const data = await getSimilarProducts(item.id, item.id_category);
-        console.log(data);
         similarItems.value = data?.products.value || [];
       } catch (error) {
         console.error(error);
@@ -267,7 +264,7 @@ export default {
       if (item.value !== undefined) {
         getSimilarProduct(item.value);
         const bottleData = item.value.attributes.find(
-          (attribute: any) => attribute.name === "bottle"
+          (attribute: Attribute) => attribute.name === "bottle"
         );
 
         bottle.value = {
@@ -276,7 +273,7 @@ export default {
           quantity: 0,
         } as Item;
         const glassData = item.value.attributes.find(
-          (attribute: any) => attribute.name === "glass"
+          (attribute: Attribute) => attribute.name === "glass"
         );
         glass.value = {
           ...glassData,
@@ -298,17 +295,18 @@ export default {
         item.isActive = item.id === tab.id;
       });
     };
-    const changeQuantity = (event: any) => {
-      const newValue = parseInt(event.target.value);
+    const changeQuantity = (event: Event) => {
+      const target = event.target as HTMLInputElement;
+      const newValue = parseInt(target.value);
       if (
-        event.target.id === "quantityBottle" &&
-        event.target.value !== "" &&
+        target.id === "quantityBottle" &&
+        target.value !== "" &&
         !isNaN(newValue)
       )
         changeBottle(newValue - bottle.value.quantity);
       else if (
-        event.target.id === "quantityGlass" &&
-        event.target.value !== "" &&
+        target.id === "quantityGlass" &&
+        target.value !== "" &&
         !isNaN(newValue)
       )
         changeGlass(newValue - glass.value.quantity);

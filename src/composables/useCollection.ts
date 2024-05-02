@@ -211,7 +211,6 @@ async function getAttributeById(id: string) {
 
 async function getSimilarProducts(id: string, id_sub_category: DocumentData) {
   const products = ref<ProductWithAttributes[]>([]);
-  console.log(id_sub_category.id);
   try {
     const q = query(
       collection(projectFirestore, "products"),
@@ -219,9 +218,7 @@ async function getSimilarProducts(id: string, id_sub_category: DocumentData) {
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (productDoc: DocumentData) => {
-      console.log(productDoc.data());
       if (productDoc.id !== id) {
-        console.log(productDoc.id);
         const productData = {
           id: productDoc.id,
           ...productDoc.data(),

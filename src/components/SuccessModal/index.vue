@@ -20,7 +20,8 @@
             </div>
             <div class="flex-row-between">
               <span class="title-name">Time</span>
-              <p class="title-name">22:00 p.m; 4th 4/ 2024</p>
+              <!-- <p class="title-name">22:00 p.m; 4th 4/ 2024</p> -->
+              <p class="title-name">{{ timestamp }}</p>
             </div>
           </div>
           <div class="list-items">
@@ -55,7 +56,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { CloseOutlined } from "@ant-design/icons-vue";
 import {
   OrderDetail,
@@ -83,6 +84,22 @@ export default defineComponent({
     CloseOutlined,
   },
   setup(props, { emit }) {
+    const timestamp = ref<string>("");
+    const getNow = () => {
+      const today = new Date();
+      const date =
+        today.getFullYear() +
+        "/" +
+        (today.getMonth() + 1) +
+        "/" +
+        today.getDate();
+      const time =
+        today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      const dateTime = time + " " + date;
+      timestamp.value = dateTime;
+    };
+
+    getNow();
     const close = () => {
       emit("closeModal");
     };
@@ -121,6 +138,7 @@ export default defineComponent({
       return total;
     };
     return {
+      timestamp,
       listOrderDetail: props.listOrderDetailProp,
       orderInfor: props.orderInforProp,
       close,

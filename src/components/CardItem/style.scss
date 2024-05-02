@@ -23,7 +23,12 @@
   gap: 12px;
   padding: 0;
   h4 {
+    max-width: 175px;
     min-height: 48px;
+    height: 48px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
     font-family: $font-family;
     font-size: 16px;
     font-weight: 500;
@@ -39,7 +44,7 @@
   @include flex(column, null, null);
   gap: 6px;
   .first-row {
-    @include flex(row, flex-start, center);
+    @include flex(row, center, center);
     div:nth-child(1) {
       border-right: 1px solid #fff;
       padding-left: 0;
@@ -47,11 +52,13 @@
   }
   .first-row div,
   .second-row div {
+    @include flex(row, null, center);
+    gap: 6px;
     font-family: Inter;
     font-size: 14px;
     font-weight: 500;
     color: #fff;
-    padding: 0 12px;
+    padding: 0 6px;
   }
 }
 
@@ -84,8 +91,37 @@
   }
 }
 
+@media screen and (min-width: 1366px) {
+  .content {
+    padding: 0 4px;
+    h4 {
+      min-height: 48px;
+    }
+  }
+  .detail {
+    width: 100%;
+    .first-row div,
+    .second-row div {
+      gap: 6px;
+      padding: 0 6px;
+    }
+  }
+}
+
 @media screen and (min-width: 1500px) {
   .content {
     padding: 0 12px;
+    h4 {
+      min-height: 48px;
+      max-width: 240px;
+    }
+  }
+  .detail {
+    width: 100%;
+    .first-row div,
+    .second-row div {
+      gap: 8px;
+      padding: 0 12px;
+    }
   }
 }
