@@ -186,6 +186,7 @@ import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
 import {
   getAllProducts,
   getProductById,
+  getSimilarProducts,
 } from "../../composables/useCollection";
 import { DocumentData } from "firebase/firestore";
 import { ProductWithAttributes, Attribute } from "../../../types";
@@ -252,8 +253,9 @@ export default {
     }
     async function getSimilarProduct(item: ProductWithAttributes) {
       try {
-        const data = await getAllProducts("", item.id_category.id);
-        similarItems.value = data.products.value;
+        const data = await getSimilarProducts(item.id, item.id_category);
+        console.log(data);
+        similarItems.value = data?.products.value || [];
       } catch (error) {
         console.error(error);
       }

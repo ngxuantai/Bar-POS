@@ -12,6 +12,8 @@ $text-color: #262626;
   position: absolute;
   top: 113px;
   right: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
 }
 .checkout {
   width: 1146px;
@@ -26,6 +28,7 @@ $text-color: #262626;
   width: 786px;
   height: 100%;
   padding: 74px 53px;
+  overflow: auto;
   @include flex(column, null, null);
   gap: 32px;
   .title {

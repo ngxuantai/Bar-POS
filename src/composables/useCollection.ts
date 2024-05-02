@@ -209,24 +209,60 @@ async function getAttributeById(id: string) {
   }
 }
 
-async function getProductsBySubCategory(id_sub_category: string) {
-  const products = ref<DocumentData[]>([]);
-  const q = query(
-    collection(projectFirestore, "product"),
-    where("id_sub_category", "==", id_sub_category)
-  );
+async function getSimilarProducts(id: string, id_sub_category: DocumentData) {
+  const products = ref<ProductWithAttributes[]>([]);
+  console.log(id_sub_category.id);
   try {
+    const q = query(
+      collection(projectFirestore, "products"),
+      where("id_category", "==", id_sub_category)
+    );
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc: DocumentData) => {
-      products.value.push({
-        id: doc.id,
-        ...doc.data(),
-      });
+    querySnapshot.forEach(async (productDoc: DocumentData) => {
+      console.log(productDoc.data());
+      if (productDoc.id !== id) {
+        console.log(productDoc.id);
+        const productData = {
+          id: productDoc.id,
+          ...productDoc.data(),
+        } as Product;
+        const productWithAttributes: ProductWithAttributes = {
+          ...productData,
+          attributes: [],
+        };
+
+        //get table product_attributes
+        const productAttributeQuery = query(
+          collection(projectFirestore, "product_attributes"),
+          where("id_product", "==", productDoc.ref)
+        );
+        const productAttributeQuerySnapshot = await getDocs(
+          productAttributeQuery
+        );
+
+        //loop through list product_attributes
+        for (const productAttributeDoc of productAttributeQuerySnapshot.docs) {
+          const productAttributeData = productAttributeDoc.data();
+
+          //get list attributes
+          const attributeDoc = await getDoc(productAttributeData.id_attribute);
+          const attribute: Attribute = {
+            id: attributeDoc.id,
+            name: (attributeDoc.data() as Attribute).name,
+            value: productAttributeData.value,
+            price: productAttributeData.price,
+            number_product: productAttributeData.number_product,
+          };
+          productWithAttributes.attributes.push(attribute);
+        }
+        products.value.push(productWithAttributes);
+      }
     });
+    products.value = products.value.slice(0, 4);
+    return { products };
   } catch (error) {
     console.error("Error getting documents: ", error);
   }
-  return { products };
 }
 
 async function addOrder(
@@ -332,7 +368,7 @@ export {
   getAllProducts,
   getAttributeById,
   getProductById,
-  getProductsBySubCategory,
+  getSimilarProducts,
   loading,
   addOrder,
 };
