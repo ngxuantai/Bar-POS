@@ -39,6 +39,37 @@ const store = createStore({
       state.order_infor.total_quantity += orderPayload.total_quantity;
       state.order_infor.total_price += orderPayload.total_price_product;
     },
+    deleteOrder(state, { productId, attributeId }) {
+      state.list_order_detail.forEach((orderDetail: OrderDetail) => {
+        if (orderDetail.infor_product.id === productId) {
+          orderDetail.infor_product.attributes.map((attribute) => {
+            if (attribute.id === attributeId) {
+              orderDetail.total_quantity -= attribute.quantity;
+              orderDetail.total_price_product -=
+                attribute.price * attribute.quantity;
+              attribute.quantity = 0;
+            }
+          });
+        }
+      });
+      state.order_infor.total_quantity = state.list_order_detail.reduce(
+        (acc, orderDetail) => {
+          return acc + orderDetail.total_quantity;
+        },
+        0
+      );
+      state.order_infor.total_price = state.list_order_detail.reduce(
+        (acc, orderDetail) => {
+          return acc + orderDetail.total_price_product;
+        },
+        0
+      );
+      state.list_order_detail = state.list_order_detail.filter(
+        (orderDetail) => {
+          return orderDetail.total_quantity > 0;
+        }
+      );
+    },
     clearOrder(state) {
       state.list_order_detail = [];
       state.order_infor = {
@@ -54,6 +85,9 @@ const store = createStore({
     },
     clearCart({ commit }) {
       commit("clearOrder");
+    },
+    deleteOrder({ commit }, { productId, attributeId }) {
+      commit("deleteOrder", { productId, attributeId });
     },
   },
 });

@@ -1,4 +1,3 @@
-<!-- :style="{ right: right }" -->
 <template>
   <button
     class="badgecart"
@@ -31,89 +30,36 @@
         <div class="select-container">
           <div
             class="select-row"
-            v-if="getBottleData(orderDetail.infor_product).quantity > 0"
+            v-for="attr in orderDetail.infor_product.attributes"
+            :key="attr.id"
           >
-            <div class="select-quantity">
+            <div class="select-quantity" v-if="attr.quantity > 0">
               <div class="type">
                 <img src="../../assets/icon/bottle-black.png" alt="bottle" />
-                <span>{{
-                  getBottleData(orderDetail.infor_product).value + " ml bottle"
-                }}</span>
+                <span>{{ attr.value + ` ml ` + attr.name }}</span>
               </div>
-              <p class="price">
-                ${{ getBottleData(orderDetail.infor_product).price }}
-              </p>
+              <p class="price">${{ attr.price }}</p>
               <div class="btn-change">
-                <a-button class="btn-disable">
+                <a-button
+                  class="btn-disable"
+                  @click="updateAttributeQuantity(attr, -1)"
+                >
                   <minus-outlined />
                 </a-button>
-                <span>{{
-                  getBottleData(orderDetail.infor_product).quantity
-                }}</span>
+                <span>{{ attr.quantity }}</span>
                 <a-button
                   class="btn-active"
-                  @click="updateBottleQuantity(orderDetail.infor_product, 1)"
+                  @click="updateAttributeQuantity(attr, 1)"
                 >
                   <plus-outlined />
                 </a-button>
               </div>
-              <p class="real-price">
-                ${{
-                  getBottleData(orderDetail.infor_product).price *
-                  getBottleData(orderDetail.infor_product).quantity
-                }}
-              </p>
+              <p class="real-price">${{ attr.price * attr.quantity }}</p>
             </div>
             <delete-outlined
               style="color: #bfbfbf"
-              @click="
-                deleteAttribute(
-                  orderDetail.infor_product,
-                  getBottleData(orderDetail.infor_product)
-                )
-              "
-            />
-          </div>
-          <div
-            class="select-row"
-            v-if="getGlassData(orderDetail.infor_product).quantity > 0"
-          >
-            <div class="select-quantity">
-              <div class="type">
-                <img src="../../assets/icon/glass-black.png" alt="glass" />
-                <span>{{
-                  getGlassData(orderDetail.infor_product).value + " ml glass"
-                }}</span>
-              </div>
-              <p class="price">
-                ${{ getGlassData(orderDetail.infor_product).price }}
-              </p>
-              <div class="btn-change">
-                <a-button class="btn-disable">
-                  <minus-outlined />
-                </a-button>
-                <span>{{
-                  getGlassData(orderDetail.infor_product).quantity
-                }}</span>
-                <a-button class="btn-active">
-                  <plus-outlined />
-                </a-button>
-              </div>
-              <p class="real-price">
-                ${{
-                  getGlassData(orderDetail.infor_product).price *
-                  getGlassData(orderDetail.infor_product).quantity
-                }}
-              </p>
-            </div>
-            <delete-outlined
-              style="color: #bfbfbf"
-              @click="
-                deleteAttribute(
-                  orderDetail.infor_product,
-                  getGlassData(orderDetail.infor_product)
-                )
-              "
+              @click="deleteAttribute(orderDetail.infor_product, attr)"
+              v-if="attr.quantity > 0"
             />
           </div>
         </div>
@@ -167,15 +113,22 @@
   <success-modal
     :show="shwoPurchase"
     @closeModal="shwoPurchase = false"
-    :listOrderDetailProp="listOrderDetail"
-    :orderInforProp="orderInfor"
+    :listOrderDetailProp="listOrderDetailProp"
+    :orderInforProp="orderInforProp"
   />
 </template>
 
 <script lang="ts">
-import { ref, computed } from "vue";
+import { ref, watch } from "vue";
 import { useStore } from "vuex";
 import SuccessModal from "../SuccessModal/index.vue";
+import { getTextAttribute } from "../../utils/attributeHelper";
+import {
+  AttributeWithQuantity,
+  ProductWithQuantity,
+  OrderDetail,
+  OrderInfor,
+} from "../../../types";
 import {
   MinusOutlined,
   PlusOutlined,
@@ -184,11 +137,6 @@ import {
   EditOutlined,
   GiftOutlined,
 } from "@ant-design/icons-vue";
-import {
-  AttributeWithQuantity,
-  ProductWithQuantity,
-  OrderDetail,
-} from "../../../types";
 import { addOrder } from "../../composables/useCollection";
 
 export default {
@@ -205,40 +153,38 @@ export default {
     const store = useStore();
     const show = ref<boolean>(false);
     const right = ref<string>("0");
-    const listOrderDetail = computed(() => {
-      return store.state.list_order_detail;
-    });
-    const orderInfor = computed(() => {
-      return store.state.order_infor;
-    });
+    const listOrderDetail = ref<OrderDetail[]>(store.state.list_order_detail);
+    const orderInfor = ref<OrderInfor>(store.state.order_infor);
     const notes = ref<string>("");
     const promoCode = ref<string>("");
     const shwoPurchase = ref<boolean>(false);
+    const listOrderDetailProp = ref<OrderDetail[]>([]);
+    const orderInforProp = ref<OrderInfor>({
+      discount: 0,
+      total_price: 0,
+      total_quantity: 0,
+    });
 
-    const getBottleData = (product: ProductWithQuantity) => {
-      return product.attributes.find(
-        (attr: AttributeWithQuantity) => attr.name === "bottle"
-      ) as AttributeWithQuantity;
-    };
-    const updateBottleQuantity = (
-      product: ProductWithQuantity,
+    watch(
+      () => store.state.list_order_detail,
+      () => {
+        console.log("watch");
+        listOrderDetail.value = store.state.list_order_detail;
+      }
+    );
+    watch(
+      () => store.state.order_infor,
+      () => {
+        orderInfor.value = store.state.order_infor;
+      }
+    );
+
+    const updateAttributeQuantity = (
+      attribute: AttributeWithQuantity,
       quantity: number
     ) => {
-      const bottle = getBottleData(product);
-      bottle.quantity += quantity;
+      attribute.quantity += quantity;
       updateCart();
-    };
-    const getGlassData = (product: ProductWithQuantity) => {
-      return product.attributes.find(
-        (attr: AttributeWithQuantity) => attr.name === "glass"
-      ) as AttributeWithQuantity;
-    };
-    const updateGlassQuantity = (
-      product: ProductWithQuantity,
-      quantity: number
-    ) => {
-      const glass = getGlassData(product);
-      glass.quantity += quantity;
     };
     const updateCart = () => {
       orderInfor.value.total_price = 0;
@@ -250,56 +196,40 @@ export default {
           (attr: AttributeWithQuantity) => {
             orderDetail.total_price_product += attr.price * attr.quantity;
             orderDetail.total_quantity += attr.quantity;
-            if (orderDetail.total_price_product === 0) {
-              listOrderDetail.value.splice(
-                listOrderDetail.value.indexOf(orderDetail),
-                1
-              );
-            }
           }
         );
         orderInfor.value.total_price += orderDetail.total_price_product;
         orderInfor.value.total_quantity += orderDetail.total_quantity;
       });
+      listOrderDetail.value = listOrderDetail.value.filter(
+        (orderDetail: OrderDetail) => orderDetail.total_quantity > 0
+      );
     };
     const deleteAttribute = (
       product: ProductWithQuantity,
       attribute: AttributeWithQuantity
     ) => {
-      product.attributes.map((attr: AttributeWithQuantity) => {
-        if (attr.id === attribute.id) {
-          attr.quantity = 0;
-        }
+      store.dispatch("deleteOrder", {
+        productId: product.id,
+        attributeId: attribute.id,
       });
-      updateCart();
-    };
-    const getTextAttribute = (product: ProductWithQuantity) => {
-      let text = "";
-      const bottle = getBottleData(product);
-      const glass = getGlassData(product);
-      if (bottle.quantity > 0) {
-        text += `${bottle.value} ml ${bottle.name} x ${bottle.quantity}`;
-      }
-      if (bottle.quantity > 0 && glass.quantity > 0) {
-        text += ", ";
-      }
-      if (glass.quantity > 0) {
-        text += `${glass.value} ml ${glass.name} x ${glass.quantity}`;
-      }
-      return text;
     };
     const toggleShowCheckout = () => {
       show.value = !show.value;
       right.value = show.value ? "1146px" : "0";
     };
     const shwoPurchaseModal = async () => {
-      try {
-        await addOrder();
-        shwoPurchase.value = true;
-        toggleShowCheckout();
-        store.dispatch("clearCart");
-      } catch (error) {
-        console.log(error);
+      if (orderInfor.value.total_quantity > 0) {
+        try {
+          await addOrder();
+          shwoPurchase.value = true;
+          listOrderDetailProp.value = listOrderDetail.value;
+          orderInforProp.value = orderInfor.value;
+          store.dispatch("clearCart");
+          toggleShowCheckout();
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     return {
@@ -310,10 +240,9 @@ export default {
       notes,
       promoCode,
       shwoPurchase,
-      getBottleData,
-      updateBottleQuantity,
-      getGlassData,
-      updateGlassQuantity,
+      listOrderDetailProp,
+      orderInforProp,
+      updateAttributeQuantity,
       deleteAttribute,
       getTextAttribute,
       toggleShowCheckout,

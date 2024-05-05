@@ -21,6 +21,12 @@ interface Attribute {
   number_product: number;
 }
 
+interface AttributeItem extends Attribute {
+  check: boolean;
+  quantity: number;
+  error: string;
+}
+
 interface AttributeWithQuantity extends Attribute {
   quantity: number;
 }
@@ -50,4 +56,14 @@ interface Category {
   children?: Category[];
 }
 
-export type { Product, ProductWithAttributes, Attribute, AttributeWithQuantity, ProductWithQuantity, OrderDetail, OrderInfor, Category };
+export type {
+  Product,
+  ProductWithAttributes,
+  Attribute,
+  AttributeItem,
+  AttributeWithQuantity,
+  ProductWithQuantity,
+  OrderDetail,
+  OrderInfor,
+  Category
+};

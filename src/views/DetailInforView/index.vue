@@ -15,124 +15,72 @@
           <h3>{{ item?.name }}</h3>
           <p>{{ item?.description }}</p>
         </div>
-        <div class="select-container">
+        <div
+          class="select-container"
+          v-for="attribute in attributes"
+          :key="attribute.id"
+        >
           <div
             class="select-row"
             :style="{
-              background: bottle.check ? '#181818' : 'transparent',
+              background: attribute.check ? '#181818' : 'transparent',
             }"
           >
             <custom-checkbox
-              :status="bottle.check"
-              @change="bottle.check = !bottle.check"
+              :status="attribute.check"
+              @change="attribute.check = !attribute.check"
             />
             <div
               class="select-quantity"
               :class="{
-                'checked-text': bottle.check,
-                'unchecked-text': !bottle.check,
+                'checked-text': attribute.check,
+                'unchecked-text': !attribute.check,
               }"
             >
               <div class="type flex-row-start">
                 <img src="../../assets/icon/bottle-white.png" alt="bottle" />
-                <span>{{ bottle.value }} ml bottle</span>
+                <span>{{ attribute.value }} ml {{ attribute.name }}</span>
               </div>
-              <p class="price">${{ bottle.price }}</p>
+              <p class="price">${{ attribute.price }}</p>
               <div class="btn-change">
                 <button
-                  @click="changeBottle(-1)"
+                  @click="changeQuantity(attributes, -1, attribute.id)"
                   :class="{
-                    'btn-active': bottle.quantity > 0,
+                    'btn-active': attribute.quantity > 0,
                     'btn-disable':
-                      bottle.quantity === 0 || bottle.check === false,
+                      attribute.quantity === 0 || attribute.check === false,
                   }"
-                  :disabled="bottle.quantity === 0 || bottle.check === false"
+                  :disabled="
+                    attribute.quantity === 0 || attribute.check === false
+                  "
                 >
                   <minus-outlined />
                 </button>
                 <input
                   type="type"
                   inputmode="numeric"
-                  id="quantityBottle"
-                  :value="bottle.quantity"
-                  @input="changeQuantity($event)"
-                  :disabled="bottle.check === false"
+                  :value="attribute.quantity"
+                  @input="changeQuantity(attributes, 0, attribute.id, $event)"
+                  :disabled="attribute.check === false"
                 />
                 <button
-                  @click="changeBottle(1)"
+                  @click="changeQuantity(attributes, 1, attribute.id)"
                   :class="{
-                    'btn-active': bottle.check === true,
-                    'btn-disable': bottle.check === false,
+                    'btn-active': attribute.check === true,
+                    'btn-disable': attribute.check === false,
                   }"
-                  :disabled="bottle.check === false"
+                  :disabled="attribute.check === false"
                 >
                   <plus-outlined />
                 </button>
               </div>
-              <p class="real-price">${{ bottle.price * bottle.quantity }}</p>
+              <p class="real-price">
+                ${{ attribute.price * attribute.quantity }}
+              </p>
             </div>
           </div>
           <div class="error">
-            <p>{{ errorBottle }}</p>
-          </div>
-          <div
-            class="select-row"
-            :style="{
-              background: glass.check ? '#181818' : 'transparent',
-            }"
-          >
-            <custom-checkbox
-              :status="glass.check"
-              @change="glass.check = !glass.check"
-            />
-            <div
-              class="select-quantity"
-              :class="{
-                'checked-text': glass.check,
-                'unchecked-text': !glass.check,
-              }"
-            >
-              <div class="type flex-row-start">
-                <img src="../../assets/icon/glass-white.png" alt="glass" />
-                <span>{{ glass.value }} ml glass</span>
-              </div>
-              <p class="price">${{ glass.price }}</p>
-              <div class="btn-change">
-                <button
-                  @click="changeGlass(-1)"
-                  :class="{
-                    'btn-active': glass.quantity > 0,
-                    'btn-disable':
-                      glass.quantity === 0 || glass.check === false,
-                  }"
-                  :disabled="glass.quantity === 0 || glass.check === false"
-                >
-                  <minus-outlined />
-                </button>
-                <input
-                  type="type"
-                  inputmode="numeric"
-                  id="quantityGlass"
-                  :value="glass.quantity"
-                  @input="changeQuantity"
-                  :disabled="glass.check === false"
-                />
-                <button
-                  @click="changeGlass(1)"
-                  :class="{
-                    'btn-active': glass.check === true,
-                    'btn-disable': glass.check === false,
-                  }"
-                  :disabled="glass.check === false"
-                >
-                  <plus-outlined />
-                </button>
-              </div>
-              <p class="real-price">${{ glass.price * glass.quantity }}</p>
-            </div>
-          </div>
-          <div class="error">
-            <p>{{ errorGlass }}</p>
+            <p>{{ attribute.error }}</p>
           </div>
         </div>
         <div class="add-cart">
@@ -187,17 +135,22 @@ import {
   getProductById,
   getSimilarProducts,
 } from "../../composables/useCollection";
-import { ProductWithAttributes, Attribute } from "../../../types";
+import {
+  changeQuantity,
+  checkAttribute,
+  resetAttributes,
+} from "../../utils/attributeHelper";
+import { createOrderDetail } from "../../utils/orderHelper";
+import {
+  ProductWithAttributes,
+  Attribute,
+  AttributeItem,
+} from "../../../types";
 
 interface Tab {
   id: number;
   title: string;
   isActive: boolean;
-}
-
-interface Item extends Attribute {
-  check: boolean;
-  quantity: number;
 }
 
 export default {
@@ -218,27 +171,8 @@ export default {
       { id: 3, title: "Discounts", isActive: false },
     ]);
     const item = ref<ProductWithAttributes>();
+    const attributes = ref<AttributeItem[]>([]);
     const similarItems = ref<ProductWithAttributes[]>([]);
-    const bottle = ref<Item>({
-      id: "",
-      name: "",
-      value: 0,
-      price: 0,
-      number_product: 0,
-      check: false,
-      quantity: 0,
-    });
-    const errorBottle = ref<string>("");
-    const glass = ref<Item>({
-      id: "",
-      name: "",
-      value: 0,
-      price: 0,
-      number_product: 0,
-      check: false,
-      quantity: 0,
-    });
-    const errorGlass = ref<string>("");
 
     async function getProductData() {
       const id = route.params.id;
@@ -263,23 +197,14 @@ export default {
     watch(item, () => {
       if (item.value !== undefined) {
         getSimilarProduct(item.value);
-        const bottleData = item.value.attributes.find(
-          (attribute: Attribute) => attribute.name === "bottle"
-        );
-
-        bottle.value = {
-          ...bottleData,
-          check: false,
-          quantity: 0,
-        } as Item;
-        const glassData = item.value.attributes.find(
-          (attribute: Attribute) => attribute.name === "glass"
-        );
-        glass.value = {
-          ...glassData,
-          check: false,
-          quantity: 0,
-        } as Item;
+        item.value.attributes.map((attribute: Attribute) => {
+          attributes.value.push({
+            ...attribute,
+            check: false,
+            quantity: 0,
+            error: "",
+          });
+        });
       }
     });
 
@@ -295,114 +220,23 @@ export default {
         item.isActive = item.id === tab.id;
       });
     };
-    const changeQuantity = (event: Event) => {
-      const target = event.target as HTMLInputElement;
-      const newValue = parseInt(target.value);
-      if (
-        target.id === "quantityBottle" &&
-        target.value !== "" &&
-        !isNaN(newValue)
-      )
-        changeBottle(newValue - bottle.value.quantity);
-      else if (
-        target.id === "quantityGlass" &&
-        target.value !== "" &&
-        !isNaN(newValue)
-      )
-        changeGlass(newValue - glass.value.quantity);
-    };
-    const changeBottle = (number: number) => {
-      bottle.value.quantity += number;
-      if (bottle.value.quantity < 0) {
-        bottle.value.quantity = 0;
-      }
-      if (bottle.value.quantity > bottle.value.number_product) {
-        errorBottle.value =
-          "The quantity you selected has reached the maximum capacity for this product";
-      } else {
-        errorBottle.value = "";
-      }
-    };
-    const changeGlass = (number: number) => {
-      glass.value.quantity += number;
-      if (glass.value.quantity < 0) {
-        glass.value.quantity = 0;
-      }
-      if (glass.value.quantity > glass.value.number_product) {
-        errorGlass.value =
-          "The quantity you selected has reached the maximum capacity for this product";
-      } else {
-        errorGlass.value = "";
-      }
-    };
     const navigateHome = () => {
       router.push("/home");
     };
-    const resetData = () => {
-      bottle.value = {
-        ...bottle.value,
-        check: false,
-        quantity: 0,
-      };
-      glass.value = {
-        ...glass.value,
-        check: false,
-        quantity: 0,
-      };
-    };
     const addToCart = () => {
-      if (bottle.value.quantity === 0 && glass.value.quantity === 0) {
-        errorBottle.value = "Please select the quantity";
-        errorGlass.value = "Please select the quantity";
-        return;
-      } else if (item.value) {
-        const product = {
-          infor_product: {
-            id: item.value.id,
-            name: item.value.name,
-            description: item.value.description,
-            about: item.value.about,
-            id_category: item.value.id_category,
-            attributes: [
-              {
-                id: bottle.value.id,
-                name: bottle.value.name,
-                value: bottle.value.value,
-                price: bottle.value.price,
-                quantity: bottle.value.quantity,
-              },
-              {
-                id: glass.value.id,
-                name: glass.value.name,
-                value: glass.value.value,
-                price: glass.value.price,
-                quantity: glass.value.quantity,
-              },
-            ],
-          },
-          notes: "",
-          discount: 0,
-          total_quantity: bottle.value.quantity + glass.value.quantity,
-          total_price_product:
-            bottle.value.price * bottle.value.quantity +
-            glass.value.price * glass.value.quantity,
-        };
+      if (checkAttribute(attributes) && item.value) {
+        const product = createOrderDetail(item.value, attributes);
         store.dispatch("addCart", product);
-        resetData();
+        resetAttributes(attributes);
       }
     };
     return {
       listTabs,
-      bottle,
-      errorBottle,
-      glass,
-      errorGlass,
+      attributes,
       item,
       similarItems,
       changeTab,
       changeQuantity,
-      changeBottle,
-      changeGlass,
       navigateHome,
       addToCart,
     };

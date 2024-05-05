@@ -21,7 +21,6 @@
             </div>
             <div class="flex-row-between">
               <span class="title-name">Time</span>
-              <!-- <p class="title-name">22:00 p.m; 4th 4/ 2024</p> -->
               <p class="title-name">{{ timestamp }}</p>
             </div>
           </div>
@@ -58,13 +57,12 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from "vue";
-import { CloseOutlined } from "@ant-design/icons-vue";
 import {
-  OrderDetail,
-  OrderInfor,
-  ProductWithQuantity,
-  AttributeWithQuantity,
-} from "../../../types";
+  getTextAttribute,
+  getTotalPriceOrderDetail,
+} from "../../utils/attributeHelper";
+import { CloseOutlined } from "@ant-design/icons-vue";
+import { OrderDetail, OrderInfor } from "../../../types";
 
 export default defineComponent({
   props: {
@@ -86,9 +84,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const listOrderDetail = computed(() => props.listOrderDetailProp);
-    console.log(listOrderDetail);
     const orderInfor = computed(() => props.orderInforProp);
-    console.log(orderInfor);
     const timestamp = ref<string>("");
     const getNow = () => {
       const today = new Date();
@@ -111,43 +107,6 @@ export default defineComponent({
     const close = () => {
       resetData();
       emit("closeModal");
-    };
-    const getBottleData = (product: ProductWithQuantity) => {
-      return product.attributes.find(
-        (attr: AttributeWithQuantity) => attr.name === "bottle"
-      ) as AttributeWithQuantity;
-    };
-    const getGlassData = (product: ProductWithQuantity) => {
-      return product.attributes.find(
-        (attr: AttributeWithQuantity) => attr.name === "glass"
-      ) as AttributeWithQuantity;
-    };
-    const getTextAttribute = (product: ProductWithQuantity) => {
-      let text = "";
-      const bottle = getBottleData(product);
-      const glass = getGlassData(product);
-      if (bottle.quantity > 0) {
-        text += `${bottle.value} ml ${bottle.name} x ${bottle.quantity}`;
-      }
-      if (bottle.quantity > 0 && glass.quantity > 0) {
-        text += ", ";
-      }
-      if (glass.quantity > 0) {
-        text += `${glass.value} ml ${glass.name} x ${glass.quantity}`;
-      }
-      return text;
-    };
-    const getTotalPriceOrderDetail = (product: ProductWithQuantity) => {
-      let total = 0;
-      const bottle = getBottleData(product);
-      const glass = getGlassData(product);
-      if (bottle.quantity > 0) {
-        total += bottle.price * bottle.quantity;
-      }
-      if (glass.quantity > 0) {
-        total += glass.price * glass.quantity;
-      }
-      return total;
     };
     return {
       timestamp,

@@ -7,14 +7,9 @@
       <h4>{{ item.name }}</h4>
       <div class="detail">
         <div class="first-row">
-          <!-- <div v-for="attribute in item.attributes" :key="attribute.id"> -->
-          <div>
+          <div v-for="attribute in item.attributes" :key="attribute.id">
             <img src="../../assets/icon/glass.png" alt="image" />
-            {{ getGlassData(item)?.value }}ml {{ getGlassData(item)?.name }}
-          </div>
-          <div>
-            <img src="../../assets/icon/bottle.png" alt="image" />
-            {{ getBottleData(item)?.value }}ml {{ getBottleData(item)?.name }}
+            {{ attribute.value }}ml {{ attribute.name }}
           </div>
         </div>
       </div>
@@ -45,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import OrderModal from "../../components/OrderModal/index.vue";
 import SuccessModal from "../SuccessModal/index.vue";
@@ -71,7 +66,9 @@ export default defineComponent({
     const router = useRouter();
     const showOdering = ref<boolean>(false);
     const shwoPurchase = ref<boolean>(false);
-    const item = ref(props.data);
+    const item = computed(() => {
+      return sortAttributes(props.data);
+    });
     const listOrderDetailProp = ref<OrderDetail[]>([]);
     const orderInforProp = ref<OrderInfor>({
       discount: 0,
@@ -79,17 +76,11 @@ export default defineComponent({
       total_quantity: 0,
     });
 
-    const getBottleData = (product: ProductWithAttributes) => {
-      const attribute = product.attributes.find(
-        (attribute) => attribute.name === "bottle"
-      );
-      return attribute;
-    };
-    const getGlassData = (product: ProductWithAttributes) => {
-      const attribute = product.attributes.find(
-        (attribute) => attribute.name === "glass"
-      );
-      return attribute;
+    const sortAttributes = (product: ProductWithAttributes) => {
+      const sort = product.attributes.sort((a, b) => {
+        return a.price - b.price;
+      });
+      return { ...product, attributes: sort };
     };
     const minVolumePrice = (attributes: Attribute[]) => {
       return Math.min(
@@ -120,8 +111,6 @@ export default defineComponent({
       item,
       listOrderDetailProp,
       orderInforProp,
-      getBottleData,
-      getGlassData,
       minVolumePrice,
       maxVolumePrice,
       getOrderData,

@@ -270,6 +270,7 @@ async function addOrder(
   try {
     //create order form store data
     const docOrderRef = await addDoc(collection(projectFirestore, "orders"), {
+      time_create: new Date(),
       notes: "",
       discount: (orderInforArgu || store.state.order_infor).discount,
       total_quantity: (orderInforArgu || store.state.order_infor)
@@ -282,10 +283,13 @@ async function addOrder(
       orderDetailAgru.infor_product.attributes.forEach(async (attribute) => {
         if (attribute.quantity > 0) {
           const orderDetailData = {
+            time_create: new Date(),
             id_order: docOrderRef.id,
             id_product: orderDetailAgru.infor_product.id,
             name_product: orderDetailAgru.infor_product.name,
             id_attribute: attribute.id,
+            name_attribute: attribute.name,
+            value_attribute: attribute.value,
             quantity: attribute.quantity,
             price: attribute.price,
             discount: orderDetailAgru.discount,
@@ -306,10 +310,13 @@ async function addOrder(
         orderDetail.infor_product.attributes.forEach(async (attribute) => {
           if (attribute.quantity > 0) {
             const orderDetailData = {
+              time_create: new Date(),
               id_order: docOrderRef.id,
               id_product: orderDetail.infor_product.id,
               name_product: orderDetail.infor_product.name,
               id_attribute: attribute.id,
+              name_attribute: attribute.name,
+              value_attribute: attribute.value,
               quantity: attribute.quantity,
               price: attribute.price,
               discount: orderDetail.discount,
