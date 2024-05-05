@@ -1,5 +1,6 @@
 <template>
   <div v-if="show" class="modal">
+    <div class="back-layout" @click="close"></div>
     <div class="modal-content">
       <div class="title">
         <close-outlined @click="close" />
@@ -354,8 +355,6 @@ export default defineComponent({
       return orderDetail;
     };
     const addCart = () => {
-      // emit("addCart");
-      // emit("closeModal");
       if (
         (bottle.value.quantity > 0 || glass.value.quantity > 0) &&
         errorBottle.value === "" &&
@@ -399,24 +398,29 @@ export default defineComponent({
       }
     };
     const order = async () => {
-      emit("order");
-      const orderDetail = createOrderDetail();
-      listOrderDetail.value = [orderDetail];
-      orderInfor.value = {
-        discount: 0,
-        total_price: orderDetail.total_price_product,
-        total_quantity: orderDetail.total_quantity,
-      };
-      try {
-        await addOrder(orderDetail, {
+      if (
+        (bottle.value.quantity > 0 || glass.value.quantity > 0) &&
+        errorBottle.value === "" &&
+        errorGlass.value === ""
+      ) {
+        const orderDetail = createOrderDetail();
+        listOrderDetail.value = [orderDetail];
+        orderInfor.value = {
           discount: 0,
           total_price: orderDetail.total_price_product,
           total_quantity: orderDetail.total_quantity,
-        });
-        emit("getOrderData", listOrderDetail.value, orderInfor.value);
-        resetData();
-      } catch (error) {
-        console.log(error);
+        };
+        try {
+          await addOrder(orderDetail, {
+            discount: 0,
+            total_price: orderDetail.total_price_product,
+            total_quantity: orderDetail.total_quantity,
+          });
+          emit("getOrderData", listOrderDetail.value, orderInfor.value);
+          resetData();
+        } catch (error) {
+          console.log(error);
+        }
       }
     };
     return {

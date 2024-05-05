@@ -64,7 +64,15 @@
                 }}
               </p>
             </div>
-            <delete-outlined style="color: #bfbfbf" />
+            <delete-outlined
+              style="color: #bfbfbf"
+              @click="
+                deleteAttribute(
+                  orderDetail.infor_product,
+                  getBottleData(orderDetail.infor_product)
+                )
+              "
+            />
           </div>
           <div
             class="select-row"
@@ -98,7 +106,15 @@
                 }}
               </p>
             </div>
-            <delete-outlined style="color: #bfbfbf" />
+            <delete-outlined
+              style="color: #bfbfbf"
+              @click="
+                deleteAttribute(
+                  orderDetail.infor_product,
+                  getGlassData(orderDetail.infor_product)
+                )
+              "
+            />
           </div>
         </div>
       </div>
@@ -186,7 +202,6 @@ export default {
     SuccessModal,
   },
   setup() {
-    const listProduct = ref<OrderDetail[]>([]);
     const store = useStore();
     const show = ref<boolean>(false);
     const right = ref<string>("0");
@@ -235,11 +250,28 @@ export default {
           (attr: AttributeWithQuantity) => {
             orderDetail.total_price_product += attr.price * attr.quantity;
             orderDetail.total_quantity += attr.quantity;
+            if (orderDetail.total_price_product === 0) {
+              listOrderDetail.value.splice(
+                listOrderDetail.value.indexOf(orderDetail),
+                1
+              );
+            }
           }
         );
         orderInfor.value.total_price += orderDetail.total_price_product;
         orderInfor.value.total_quantity += orderDetail.total_quantity;
       });
+    };
+    const deleteAttribute = (
+      product: ProductWithQuantity,
+      attribute: AttributeWithQuantity
+    ) => {
+      product.attributes.map((attr: AttributeWithQuantity) => {
+        if (attr.id === attribute.id) {
+          attr.quantity = 0;
+        }
+      });
+      updateCart();
     };
     const getTextAttribute = (product: ProductWithQuantity) => {
       let text = "";
@@ -248,8 +280,11 @@ export default {
       if (bottle.quantity > 0) {
         text += `${bottle.value} ml ${bottle.name} x ${bottle.quantity}`;
       }
+      if (bottle.quantity > 0 && glass.quantity > 0) {
+        text += ", ";
+      }
       if (glass.quantity > 0) {
-        text += `, ${glass.value} ml ${glass.name} x ${glass.quantity}`;
+        text += `${glass.value} ml ${glass.name} x ${glass.quantity}`;
       }
       return text;
     };
@@ -270,7 +305,6 @@ export default {
     return {
       show,
       right,
-      listProduct,
       listOrderDetail,
       orderInfor,
       notes,
@@ -280,6 +314,7 @@ export default {
       updateBottleQuantity,
       getGlassData,
       updateGlassQuantity,
+      deleteAttribute,
       getTextAttribute,
       toggleShowCheckout,
       shwoPurchaseModal,

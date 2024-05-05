@@ -1,5 +1,6 @@
 <template>
   <div v-if="show" class="modal">
+    <div class="back-layout" @click="close"></div>
     <div class="modal-content">
       <div class="title">
         <close-outlined @click="close" />
@@ -56,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { CloseOutlined } from "@ant-design/icons-vue";
 import {
   OrderDetail,
@@ -84,6 +85,10 @@ export default defineComponent({
     CloseOutlined,
   },
   setup(props, { emit }) {
+    const listOrderDetail = computed(() => props.listOrderDetailProp);
+    console.log(listOrderDetail);
+    const orderInfor = computed(() => props.orderInforProp);
+    console.log(orderInfor);
     const timestamp = ref<string>("");
     const getNow = () => {
       const today = new Date();
@@ -100,7 +105,11 @@ export default defineComponent({
     };
 
     getNow();
+    const resetData = () => {
+      timestamp.value = "";
+    };
     const close = () => {
+      resetData();
       emit("closeModal");
     };
     const getBottleData = (product: ProductWithQuantity) => {
@@ -120,8 +129,11 @@ export default defineComponent({
       if (bottle.quantity > 0) {
         text += `${bottle.value} ml ${bottle.name} x ${bottle.quantity}`;
       }
+      if (bottle.quantity > 0 && glass.quantity > 0) {
+        text += ", ";
+      }
       if (glass.quantity > 0) {
-        text += `, ${glass.value} ml ${glass.name} x ${glass.quantity}`;
+        text += `${glass.value} ml ${glass.name} x ${glass.quantity}`;
       }
       return text;
     };
@@ -139,8 +151,8 @@ export default defineComponent({
     };
     return {
       timestamp,
-      listOrderDetail: props.listOrderDetailProp,
-      orderInfor: props.orderInforProp,
+      listOrderDetail,
+      orderInfor,
       close,
       getTextAttribute,
       getTotalPriceOrderDetail,

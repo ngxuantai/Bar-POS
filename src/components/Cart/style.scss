@@ -3,6 +3,7 @@
 $text-color: #262626;
 $right-max-width: 1146px;
 $right-second-max-width: 785px;
+$right-third-max-width: 1200px;
 
 .badgecart {
   width: 72px;
@@ -286,5 +287,14 @@ $right-second-max-width: 785px;
   }
   .checkout {
     width: $right-second-max-width;
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .right {
+    right: $right-third-max-width;
+  }
+  .checkout {
+    width: $right-third-max-width;
   }
 }
