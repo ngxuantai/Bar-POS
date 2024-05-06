@@ -3,6 +3,7 @@ import {
   AttributeWithQuantity,
   ProductWithQuantity,
 } from "../../types";
+import { ATTRIBUTE_ERROR_EMPTY, ATTRIBUTE_ERROR_NOT_ENOUGH } from "@/constants";
 
 export function changeQuantity(
   attributes: AttributeItem[],
@@ -20,8 +21,7 @@ export function changeQuantity(
       }
 
       if (attribute.quantity > attribute.number_product) {
-        attribute.error =
-          "The quantity you selected has reached the maximum capacity for this product";
+        attribute.error = ATTRIBUTE_ERROR_NOT_ENOUGH;
       } else {
         attribute.error = "";
       }
@@ -49,7 +49,7 @@ export function checkAttribute(attributes: {
 
   if (allQuantityEqualZero) {
     for (const attribute of attributes.value) {
-      attribute.error = "Please select quantity";
+      attribute.error = ATTRIBUTE_ERROR_EMPTY;
     }
     return false;
   }

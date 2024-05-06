@@ -73,6 +73,7 @@ const store = createStore({
     clearOrder(state) {
       state.list_order_detail = [];
       state.order_infor = {
+        notes: "",
         discount: 0,
         total_quantity: 0,
         total_price: 0,

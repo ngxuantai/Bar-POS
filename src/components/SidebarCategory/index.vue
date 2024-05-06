@@ -11,7 +11,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import SubMenu from "../SubMenu/index.vue";
-import { getAllCategory } from "../../composables/useCollection";
+import { getAllCategory } from "../../services/CategoryService";
 import { Category } from "types";
 
 export default {

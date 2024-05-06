@@ -137,7 +137,8 @@ import {
   EditOutlined,
   GiftOutlined,
 } from "@ant-design/icons-vue";
-import { addOrder } from "../../composables/useCollection";
+import { addOrderWithCart } from "@/services/OrderDetailService";
+// import { addOrder } from "../../composables/useCollection";
 
 export default {
   components: {
@@ -160,6 +161,7 @@ export default {
     const shwoPurchase = ref<boolean>(false);
     const listOrderDetailProp = ref<OrderDetail[]>([]);
     const orderInforProp = ref<OrderInfor>({
+      notes: "",
       discount: 0,
       total_price: 0,
       total_quantity: 0,
@@ -168,7 +170,6 @@ export default {
     watch(
       () => store.state.list_order_detail,
       () => {
-        console.log("watch");
         listOrderDetail.value = store.state.list_order_detail;
       }
     );
@@ -221,7 +222,7 @@ export default {
     const shwoPurchaseModal = async () => {
       if (orderInfor.value.total_quantity > 0) {
         try {
-          await addOrder();
+          await addOrderWithCart();
           shwoPurchase.value = true;
           listOrderDetailProp.value = listOrderDetail.value;
           orderInforProp.value = orderInfor.value;

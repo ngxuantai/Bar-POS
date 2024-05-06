@@ -18,7 +18,7 @@ import { ref, reactive, computed, defineComponent, watch } from "vue";
 import { useRoute } from "vue-router";
 import SearchHeader from "../../components/SearchHeader/index.vue";
 import ListCardItem from "../../components/ListCardItem/index.vue";
-import { getAllProducts } from "../../composables/useCollection";
+import { getAllProductAttributes } from "../../services/ProductAttributeService";
 import { Attribute, ProductWithAttributes } from "types";
 
 interface Tab {
@@ -44,11 +44,13 @@ export default defineComponent({
 
     async function getProductsData() {
       try {
-        const data = await getAllProducts(
+        const data = await getAllProductAttributes(
           route.query.id as string,
           route.query.id_sub as string
         );
-        listItems.value = data.products.value;
+        if (data) {
+          listItems.value = data.products.value;
+        }
       } catch (error) {
         console.error(error);
       }

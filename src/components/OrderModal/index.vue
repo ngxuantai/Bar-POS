@@ -138,7 +138,8 @@ import {
 import CustomCheckbox from "../CustomCheckbox/index.vue";
 import SuccessModal from "../SuccessModal/index.vue";
 // import { IMG_URL } from "../../constants";
-import { addOrder } from "../../composables/useCollection";
+import { addOrderWithoutCart } from "@/services/OrderDetailService";
+// import { addOrder } from "../../composables/useCollection";
 import {
   changeQuantity,
   checkAttribute,
@@ -181,6 +182,7 @@ export default defineComponent({
     const shwoPurchase = ref<boolean>(false);
     const listOrderDetail = ref<OrderDetail[]>([]);
     const orderInfor = ref<OrderInfor>({
+      notes: "",
       discount: 0,
       total_price: 0,
       total_quantity: 0,
@@ -214,12 +216,14 @@ export default defineComponent({
         const orderDetail = createOrderDetail(props.data, attributes, notes);
         listOrderDetail.value = [orderDetail];
         orderInfor.value = {
+          notes: notes.value,
           discount: 0,
           total_price: orderDetail.total_price_product,
           total_quantity: orderDetail.total_quantity,
         };
         try {
-          await addOrder(orderDetail, {
+          await addOrderWithoutCart(orderDetail, {
+            notes: notes.value,
             discount: 0,
             total_price: orderDetail.total_price_product,
             total_quantity: orderDetail.total_quantity,

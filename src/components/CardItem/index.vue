@@ -71,6 +71,7 @@ export default defineComponent({
     });
     const listOrderDetailProp = ref<OrderDetail[]>([]);
     const orderInforProp = ref<OrderInfor>({
+      notes: "",
       discount: 0,
       total_price: 0,
       total_quantity: 0,

@@ -43,7 +43,22 @@ interface OrderDetail {
   total_price_product: number;
 }
 
+interface OrderDetailData {
+  time_create: Date;
+  id_order: string;
+  id_product: string;
+  name_product: string;
+  id_attribute: string;
+  name_attribute: string;
+  value_attribute: number;
+  quantity: number;
+  price: number;
+  discount: number;
+  total_price: number;
+}
+
 interface OrderInfor {
+  notes: string;
   discount: number;
   total_quantity: number;
   total_price: number;
@@ -64,6 +79,7 @@ export type {
   AttributeWithQuantity,
   ProductWithQuantity,
   OrderDetail,
+  OrderDetailData,
   OrderInfor,
   Category
 };

@@ -132,9 +132,9 @@ import CustomCheckbox from "../../components/CustomCheckbox/index.vue";
 import CardItem from "../../components/CardItem/index.vue";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
 import {
-  getProductById,
-  getSimilarProducts,
-} from "../../composables/useCollection";
+  getProductWithAttributes,
+  getSimilarProductWithAttributes,
+} from "../../services/ProductAttributeService";
 import {
   changeQuantity,
   checkAttribute,
@@ -177,16 +177,33 @@ export default {
     async function getProductData() {
       const id = route.params.id;
       try {
-        const data = await getProductById(id as string);
-        item.value = data.product.value;
+        const data = await getProductWithAttributes(id as string);
+        if (data.product.value) {
+          item.value = data.product.value;
+          attributes.value = data.product.value.attributes.map(
+            (attribute: Attribute) => {
+              return {
+                ...attribute,
+                check: false,
+                quantity: 0,
+                error: "",
+              };
+            }
+          );
+        }
       } catch (error) {
         console.error(error);
       }
     }
     async function getSimilarProduct(item: ProductWithAttributes) {
       try {
-        const data = await getSimilarProducts(item.id, item.id_category);
-        similarItems.value = data?.products.value || [];
+        const data = await getSimilarProductWithAttributes(
+          item.id,
+          item.id_category.id
+        );
+        if (data) {
+          similarItems.value = data.products.value;
+        }
       } catch (error) {
         console.error(error);
       }
@@ -195,16 +212,8 @@ export default {
     getProductData();
 
     watch(item, () => {
-      if (item.value !== undefined) {
+      if (item.value?.attributes !== undefined) {
         getSimilarProduct(item.value);
-        item.value.attributes.map((attribute: Attribute) => {
-          attributes.value.push({
-            ...attribute,
-            check: false,
-            quantity: 0,
-            error: "",
-          });
-        });
       }
     });
 
