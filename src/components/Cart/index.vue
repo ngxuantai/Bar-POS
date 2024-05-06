@@ -122,7 +122,7 @@
 import { ref, watch } from "vue";
 import { useStore } from "vuex";
 import SuccessModal from "../SuccessModal/index.vue";
-import { getTextAttribute } from "../../utils/attributeHelper";
+import { getTextAttribute } from "../../utils/attribute";
 import {
   AttributeWithQuantity,
   ProductWithQuantity,

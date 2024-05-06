@@ -139,8 +139,8 @@ import {
   changeQuantity,
   checkAttribute,
   resetAttributes,
-} from "../../utils/attributeHelper";
-import { createOrderDetail } from "../../utils/orderHelper";
+} from "../../utils/attribute";
+import { createOrderDetail } from "../../utils/order";
 import {
   ProductWithAttributes,
   Attribute,

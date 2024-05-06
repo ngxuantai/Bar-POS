@@ -60,7 +60,7 @@ import { computed, defineComponent, ref } from "vue";
 import {
   getTextAttribute,
   getTotalPriceOrderDetail,
-} from "../../utils/attributeHelper";
+} from "../../utils/attribute";
 import { CloseOutlined } from "@ant-design/icons-vue";
 import { OrderDetail, OrderInfor } from "../../../types";
 
